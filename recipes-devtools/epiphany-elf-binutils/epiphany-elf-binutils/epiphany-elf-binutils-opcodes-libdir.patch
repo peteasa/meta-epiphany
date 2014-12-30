@@ -1,0 +1,13 @@
+--- git/opcodes/configureOld	2014-12-26 21:21:55.925926000 +0000
++++ git/opcodes/configure	2014-12-26 22:50:58.691225624 +0000
+@@ -11688,8 +11688,8 @@
+   bfdlibdir='$(libdir)'
+   bfdincludedir='$(includedir)'
+   if test "${host}" != "${target}"; then
+-    bfdlibdir='$(exec_prefix)/$(host_noncanonical)/$(target_noncanonical)/lib'
+-    bfdincludedir='$(exec_prefix)/$(host_noncanonical)/$(target_noncanonical)/include'
++    bfdlibdir='$(exec_prefix)/lib/$(target_noncanonical)'
++    bfdincludedir='$(exec_prefix)/include/$(target_noncanonical)'
+   fi
+ 
+ 
