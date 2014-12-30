@@ -24,7 +24,7 @@ LIC_FILES_CHKSUM="\
     "
 
 ENEWLIBBRANCH = "epiphany-newlib-1.20-software-cache"
-SRC_URI = " git:///home/pas/Projects/meta-yocto-parallella/epiphany-newlib.git;branch=${ENEWLIBBRANCH};name=${ENEWLIBBRANCH} \
+SRC_URI = " https://github.com/adapteva/epiphany-newlib.git;branch=${ENEWLIBBRANCH};name=${ENEWLIBBRANCH} \
           "
 
 SRCREV = "35a4aa0fd514c506cdd0f9043ee9248728db8ffc"

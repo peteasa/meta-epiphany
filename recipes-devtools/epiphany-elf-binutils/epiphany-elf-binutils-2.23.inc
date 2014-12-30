@@ -18,7 +18,7 @@ LIC_FILES_CHKSUM="\
     "
 
 EBINUTILSBRANCH = "epiphany-binutils-2_23"
-SRC_URI = "git:///home/pas/Projects/meta-yocto-parallella/epiphany-binutils.git;branch=${EBINUTILSBRANCH};name=${EBINUTILSBRANCH} \
+SRC_URI = "https://github.com/adapteva/epiphany-binutils.git;branch=${EBINUTILSBRANCH};name=${EBINUTILSBRANCH} \
      file://epiphany-elf-binutils-uclibc-300-001_ld_makefile_patch.patch \
      file://epiphany-elf-binutils-bfd-libdir.patch \
      file://epiphany-elf-binutils-opcodes-libdir.patch \
