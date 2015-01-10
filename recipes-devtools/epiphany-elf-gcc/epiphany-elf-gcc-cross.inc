@@ -3,10 +3,11 @@ inherit cross
 INHIBIT_DEFAULT_DEPS = "1"
 EXTRADEPENDS = ""
 
-# remove virtual/${TARGET_PREFIX}libc-for-gcc for now to see what is missing
-#TODO fix up newlib build to provide whatever is missing!
+# remove virtual/${TARGET_PREFIX}libc-for-gcc because I think newlib replaces that
+# TODO fix up newlib build to provide whatever is missing!
+# virtual/${TARGET_PREFIX}newlib-initial 
 
-DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}newlib-initial ${EXTRADEPENDS} ${NATIVEDEPS}"
+DEPENDS = "virtual/${TARGET_PREFIX}binutils ${EXTRADEPENDS} ${NATIVEDEPS}"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
 python () {
     if d.getVar("TARGET_OS", True).startswith("linux"):
@@ -17,14 +18,16 @@ PN = "epiphany-elf-gcc-cross-${TARGET_ARCH}"
 
 require epiphany-elf-gcc-configure-common.inc
 
+EXTRA_OECONF += "\
+    --with-cross-host=arm-poky-linux-gnueabi \
+"
+
 EXTRA_OECONF_PATHS = "\
+    --with-libtool-sysroot=${STAGING_DIR_HOST} \
+    --with-native-system-header-dir=${STAGING_DIR_TARGET}${target_includedir} \
     --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++/${BINV} \
     --with-sysroot=${STAGING_DIR_TARGET} \
     --with-build-sysroot=${STAGING_DIR_TARGET} \
-"
-
-EXTRA_OECONF += "\
-    --without-headers \
 "
 
 ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_DIR_TARGET}${target_includedir}"
@@ -166,9 +169,9 @@ do_install () {
 	done
 
 	# libquadmath headers need to  be available in the gcc libexec dir
-	install -d ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include/
-	cp ${S}/libquadmath/quadmath.h ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include/
-	cp ${S}/libquadmath/quadmath_weak.h ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include/
+	install -d ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/include/
+	cp ${S}/libquadmath/quadmath.h ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/include/
+	cp ${S}/libquadmath/quadmath_weak.h ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/include/
 
 	# We use libiberty from binutils
 	find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
@@ -177,7 +180,7 @@ do_install () {
 	# gcc-runtime installs libgcc into a special location in staging since it breaks doing a standalone build
 	case ${PN} in
 		*gcc-cross-${TARGET_ARCH}|*gcc-crosssdk-${TARGET_ARCH})
-			dest=${D}/${includedir}/gcc-build-internal-${TARGET_SYS}
+            dest=${D}/${includedir}/gcc-build-internal-${TARGET_SYS}
 			hardlinkdir . $dest
 		;;
 	esac

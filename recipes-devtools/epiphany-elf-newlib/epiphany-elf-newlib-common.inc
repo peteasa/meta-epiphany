@@ -8,9 +8,6 @@ BUGTRACKER = "https://github.com/adapteva/epiphany-newlib/issues"
 SECTION = "devel"
 LICENSE = "GPLv3"
 
-# TODO bit of a hack here just to get it working for now
-STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_SYS}:${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_SYS}"
-
 NATIVEDEPS = ""
 
 inherit autotools gettext texinfo
@@ -24,6 +21,8 @@ INHIBIT_DEFAULT_DEPS = "1"
 BINV = "${PV}"
 #S = "${WORKDIR}/epiphany-elf-newlib-${PV}"
 #S = "${TMPDIR}/work-shared/epiphany-elf-gcc-${PV}-${PR}/epiphany-elf-newlib-${PV}"
+
+## TODO this may not need to be shared so consider replacing this with normal source store
 S = "${TMPDIR}/work-shared/epiphany-elf-newlib-${PV}-${PR}/git"
 #B = "${WORKDIR}/epiphany-elf-newlib-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 B = "${WORKDIR}/git/build.${HOST_SYS}.${TARGET_SYS}"
@@ -48,32 +47,35 @@ WORKDIR_task-unpack = "${SW}"
 WORKDIR_task-patch = "${SW}"
 WORKDIR_task-preconfigure = "${SW}"
 
-# fix up commands used for packaging
-export OBJCOPY = "${TARGET_SYS}-objcopy"
-
-export AR = "${HOST_PREFIX}ar"
-export AS = "${HOST_PREFIX}as"
-export LD = "${HOST_PREFIX}ld"
-export NM = "${HOST_PREFIX}nm"
-export RANLIB = "${HOST_PREFIX}ranlib"
-export OBJCOPY = "${HOST_PREFIX}objcopy"
-export OBJDUMP = "${HOST_PREFIX}objdump"
-
-export AR_FOR_TARGET = "${TARGET_PREFIX}ar"
-export AS_FOR_TARGET = "${TARGET_PREFIX}as"
-export LD_FOR_TARGET = "${TARGET_PREFIX}ld"
-export NM_FOR_TARGET = "${TARGET_PREFIX}nm"
-export RANLIB_FOR_TARGET = "${TARGET_PREFIX}ranlib"
-
-export CC_FOR_HOST = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
-export CXX_FOR_HOST = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
-
-export CC_FOR_BUILD = "${BUILD_CC}"
-
 target_includedir ?= "${includedir}"
 target_libdir ?= "${libdir}"
 target_base_libdir ?= "${base_libdir}"
 target_prefix ?= "${prefix}"
+
+# fix up commands used for packaging
+#export OBJCOPY = "${TARGET_SYS}-objcopy"
+
+#export AR = "${HOST_PREFIX}ar"
+#export AS = "${HOST_PREFIX}as"
+#export LD = "${HOST_PREFIX}ld"
+#export NM = "${HOST_PREFIX}nm"
+#export RANLIB = "${HOST_PREFIX}ranlib"
+#export OBJCOPY = "${HOST_PREFIX}objcopy"
+#export OBJDUMP = "${HOST_PREFIX}objdump"
+
+export CC_FOR_TARGET="${TARGET_PREFIX}gcc"
+export GCC_FOR_TARGET="${TARGET_PREFIX}gcc"
+export CXX_FOR_TARGET="${TARGET_PREFIX}g++"
+export AS_FOR_TARGET="${TARGET_PREFIX}as"
+export LD_FOR_TARGET="${TARGET_PREFIX}ld"
+export NM_FOR_TARGET="${TARGET_PREFIX}nm"
+export AR_FOR_TARGET="${TARGET_PREFIX}ar"
+export RANLIB_FOR_TARGET="${TARGET_PREFIX}ranlib"
+
+#export CC_FOR_HOST = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
+#export CXX_FOR_HOST = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
+
+#export CC_FOR_BUILD = "${BUILD_CC}"
 
 CLEANFUNCS += "workshared_clean"
 # The do_clean should be exclusive since share ${S}
@@ -99,12 +101,13 @@ should_apply[vardepsexclude] += "PN"
 do_configure () {
     target=${TARGET_SYS}
 	install -d ${D}${base_libdir} ${D}${libdir}
-	hardlinkdir ${STAGING_INCDIR_NATIVE}/${NEWLIBBUILDTREENAME}$target/ ${B}
+    mkdir -p ${STAGING_INCDIR_NATIVE}/${NEWLIBBUILDTREENAME}$target/
+	# hardlinkdir ${STAGING_INCDIR_NATIVE}/${NEWLIBBUILDTREENAME}$target/ ${B}
 	mkdir -p ${B}
-	mkdir -p ${B}/$target
+	# mkdir -p ${B}/$target
 	cd ${B}
-	chmod a+x ${S}/configure
-	${S}/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
+	chmod a+x ${S}/newlib/configure
+	${S}/newlib/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
 }
 
 do_compile () {

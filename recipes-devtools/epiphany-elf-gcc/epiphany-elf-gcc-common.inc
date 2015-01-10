@@ -22,7 +22,7 @@ BPN = "epiphany-elf-gcc"
 #
 # Set some default values
 #
-gcclibdir = "${libdir}/gcc"
+
 BINV = "${PV}"
 #S = "${WORKDIR}/epiphany-elf-gcc-${PV}"
 #S = "${TMPDIR}/work-shared/epiphany-elf-gcc-${PV}-${PR}/epiphany-elf-gcc-${PV}"
@@ -50,10 +50,29 @@ WORKDIR_task-unpack = "${SW}"
 WORKDIR_task-patch = "${SW}"
 WORKDIR_task-preconfigure = "${SW}"
 
+oldincludedir="${exec_prefix}/${TARGET_SYS}/include"
+includedir="${exec_prefix}/${TARGET_SYS}/include"
+# Update bitbake.conf setting - libdir="${exec_prefix}/${baselib}"
+libdir="${exec_prefix}/${baselib}/${TARGET_SYS}"
+#   following seems to be auto added gcc/${TARGET_SYS}/${BINV}
+# Update bitbake.conf setting - libexecdir = "${libdir}/${BPN}"
+#   following seems to be auto added gcc/${TARGET_SYS}/${BINV}
+libexecdir="${exec_prefix}/${baselib}/${TARGET_SYS}"  
+gcclibdir = "${libdir}/gcc"
+
 target_includedir ?= "${includedir}"
 target_libdir ?= "${libdir}"
 target_base_libdir ?= "${base_libdir}"
 target_prefix ?= "${prefix}"
+
+export CC_FOR_TARGET="${TARGET_PREFIX}gcc"
+export GCC_FOR_TARGET="${TARGET_PREFIX}gcc"
+export CXX_FOR_TARGET="${TARGET_PREFIX}g++"
+export AS_FOR_TARGET="${TARGET_PREFIX}as"
+export LD_FOR_TARGET="${TARGET_PREFIX}ld"
+export NM_FOR_TARGET="${TARGET_PREFIX}nm"
+export AR_FOR_TARGET="${TARGET_PREFIX}ar"
+export RANLIB_FOR_TARGET="${TARGET_PREFIX}ranlib"
 
 CLEANFUNCS += "workshared_clean"
 # The do_clean should be exclusive since share ${S}

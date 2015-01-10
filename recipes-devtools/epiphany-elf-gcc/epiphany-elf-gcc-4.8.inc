@@ -10,9 +10,6 @@ BINV = "4.8.2"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/epiphany-elf-gcc-4.8:"
 
-# TODO bit of a hack here just to get it working for now
-STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_SYS}:${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_SYS}"
-
 DEPENDS =+ "mpfr gmp libmpc zlib"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
 
@@ -27,7 +24,8 @@ LIC_FILES_CHKSUM = "\
 "
 
 EGCCBRANCH = "epiphany-gcc-4.8-software-cache"
-SRC_URI = " https://github.com/adapteva/epiphany-gcc.git;branch=${EGCCBRANCH};name=${EGCCBRANCH} \
+## git:https://github.com/adapteva/epiphany-gcc.git
+SRC_URI = " git:///home/pas/Projects/meta-yocto-parallella/epiphany-gcc.git;branch=${EGCCBRANCH};name=${EGCCBRANCH} \
     file://0002-uclibc-conf.patch \
     file://0003-gcc-uclibc-locale-ctype_touplow_t.patch \
     file://0004-uclibc-locale.patch \
@@ -80,6 +78,7 @@ SRC_URI = " https://github.com/adapteva/epiphany-gcc.git;branch=${EGCCBRANCH};na
 #    file://0050-PR-target-58595.patch \
 #
 
+# Tag: epiphany-gcc-esdk-2014.11
 SRCREV = "005a35955747a2da8a48afdbbe00d80a12e41dde"
 
 S = "${TMPDIR}/work-shared/epiphany-elf-gcc-${PV}-${PR}/git"
@@ -89,18 +88,7 @@ B = "${WORKDIR}/epiphany-elf-gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 FORTRAN = ""
 JAVA = ""
 
-EXTRA_OECONF_BASE = "\
-    --with-newlib \
-    --disable-bootstrap \
-    --disable-libmudflap \
-    --with-ppl=no \
-    --with-cloog=no \
-    --enable-checking=release \
-    --enable-cheaders=c_global \
-"
-
 EXTRA_OECONF_INITIAL = "\
-    --with-newlib \
     --disable-libmudflap \
     --disable-libgomp \
     --disable-libssp \
@@ -111,7 +99,6 @@ EXTRA_OECONF_INITIAL = "\
 "
 
 EXTRA_OECONF_INTERMEDIATE = "\
-    --with-newlib \
     --disable-libmudflap \
     --disable-libgomp \
     --disable-libquadmath \
@@ -120,12 +107,11 @@ EXTRA_OECONF_INTERMEDIATE = "\
     --disable-libssp \
 "
 
-EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "
-
-EXTRA_OECONF_PATHS = "\ 
+EXTRA_OECONF_PATHS = "\
+    --with-libtool-sysroot=${STAGING_DIR_HOST} \
+    --with-native-system-header-dir=${STAGING_DIR_TARGET}${target_includedir} \
     --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++/${BINV} \ 
     --with-sysroot=${STAGING_DIR_TARGET} \ 
     --with-build-sysroot=${STAGING_DIR_TARGET} \
 "
-
 

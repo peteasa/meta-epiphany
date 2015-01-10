@@ -4,17 +4,45 @@ EXTRA_OECONF_PATHS ?= ""
 EXTRA_OECONF_INITIAL ?= ""
 EXTRA_OECONF_INTERMEDIATE ?= ""
 
+# wanted /usr/lib/gcc/epiphany-elf/4.8.2/ etc but cant get this easily so move to
+# want /usr/lib/epiphany-elf/gcc/epiphany-elf/4.8.2/
+# --build=x86_64-linux --host=arm-poky-linux-gnueabi --target=epiphany-elf
+# --prefix=/usr --exec_prefix=/usr --bindir=/usr/bin --sbindir=/usr/sbin
+# --libexecdir=/usr/lib/gcc/epiphany-elf/4.8.2 --datadir=/usr/share --sysconfdir=/etc
+# --sharedstatedir=/com --localstatedir=/var --libdir=/usr/lib/gcc/epiphany-elf/4.8.2
+# --includedir=/usr/epiphany-elf/include --oldincludedir=/usr/epiphany-elf/include
+# --infodir=/usr/share/info --mandir=/usr/share/man --disable-silent-rules
+# --disable-dependency-tracking
+# --with-libtool-sysroot=/home/pas/Projects/meta-yocto-parallella/parallella-yoctobuild/build_parallella/tmp/sysroots/parallella-hdmi
+# --disable-gdbtk --disable-werror --enable-fast-install=N/A --without-included-gettext
+# --enable-languages=c,c++ --enable-shared --enable-linker-build-id
+# --program-prefix=epiphany-elf- --with-sysroot=/    
+# --with-build-sysroot=/home/pas/Projects/meta-yocto-parallella/parallella-yoctobuild/build_parallella/tmp/sysroots/parallella-hdmi
+# --with-native-system-header-dir=/home/pas/Projects/meta-yocto-parallella/parallella-yoctobuild/build_parallella/tmp/sysroots/parallella-hdmi/usr/epiphany-elf/include
+# --with-gxx-include-dir=/usr/epiphany-elf/include/c++/4.8.2  --enable-nls
+
+# gcc etc /usr/bin
+# ar etc /usr/arm-linux-gnueabi/bin
+# programs: =/usr/lib/epiphany-elf/arm-linux-gnueabi/4.7 .. c1 collect2 libgcca crtend.o etc
+# libraries: =/usr/epiphany-elf/lib .. crt1.0 crti.0 .... libc.a
+
+# TODO check --enable-shared --enable-multiarch  
+# TODO need to work out where c++ header files are provided for epiphany-elf-gcc-runtime
+
 EXTRA_OECONF = "\
-    --with-newlib \
-    --with-cross-host=arm-poky-linux-gnueabi \
-    --enable-fast-install=N/A \
-    --enable-languages=c,c++ \
+    --enable-multilib \
     --disable-gdbtk \
     --disable-werror \
+    --enable-fast-install=N/A \
+    --without-included-gettext \
+    --enable-languages=c,c++ \
+    --enable-linker-build-id \
+    --disable-libmudflap \
+    --disable-libitm \
+    --enable-plugin \
+    --with-newlib \
     --program-prefix=${TARGET_PREFIX} \
-    --with-sysroot=/ \
-    --with-libtool-sysroot=${STAGING_DIR_HOST} \
-    --with-build-sysroot=${STAGING_DIR_HOST} \
+    ${EXTRA_OECONF_PATHS} \
 "
 
 export ac_cv_path_SED = 'sed'
@@ -46,22 +74,6 @@ _EOF
 }
 
 do_configure () {
-	# Setup these vars for cross building only
-	# ... because foo_FOR_TARGET apparently gets misinterpreted inside the
-	# gcc build stuff when the build is producing a cross compiler - i.e.
-	# when the 'current' target is the 'host' system, and the host is not
-	# the target (because the build is actually making a cross compiler!)
-	if [ "${BUILD_SYS}" != "${HOST_SYS}" ]; then
-		export CC_FOR_TARGET="${CC}"
-		export GCC_FOR_TARGET="${CC}"
-		export CXX_FOR_TARGET="${CXX}"
-		export AS_FOR_TARGET="${HOST_PREFIX}as"
-		export LD_FOR_TARGET="${HOST_PREFIX}ld"
-		export NM_FOR_TARGET="${HOST_PREFIX}nm"
-		export AR_FOR_TARGET="${HOST_PREFIX}ar"
-		export GFORTRAN_FOR_TARGET="gfortran"
-		export RANLIB_FOR_TARGET="${HOST_PREFIX}ranlib"
-	fi
 	export CC_FOR_BUILD="${BUILD_CC}"
 	export CXX_FOR_BUILD="${BUILD_CXX}"
 	export CFLAGS_FOR_BUILD="${BUILD_CFLAGS}"

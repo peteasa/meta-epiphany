@@ -21,18 +21,18 @@ FILES_${PN} = " \
 	${bindir}/* \
 	${prefix}/${TARGET_SYS}/bin/* \
     ${libdir}/${TARGET_SYS}/lib*-*.so \
-    ${prefix}/lib/ldscripts/* \
+    ${prefix}/${TARGET_SYS}/lib/ldscripts/* \
     "
 FILES_${PN}-dbg += " \
-    /usr/lib/${TARGET_SYS}/.debug/* \
+    ${libdir}/${TARGET_SYS}/.debug/* \
     "
 FILES_${PN}-dev = "	\
-    /usr/lib/${TARGET_SYS}/libbfd.so \
-    /usr/lib/${TARGET_SYS}/libopcodes.so \
-    /usr/lib/${TARGET_SYS}/*.la \
+    ${libdir}/${TARGET_SYS}/libbfd.so \
+    ${libdir}/${TARGET_SYS}/libopcodes.so \
+    ${libdir}/${TARGET_SYS}/*.la \
 	"
 FILES_${PN}-staticdev = "	\
-    /usr/lib/${TARGET_SYS}/*.a \
+    ${libdir}/${TARGET_SYS}/*.a \
 	"
 
 RPROVIDES_${PN} += "${PN}-symlinks"
@@ -136,7 +136,7 @@ do_install () {
 	#done
 
 	# Remove unwanted stuff
-	rm -rf ${D}${prefix}/lib/libiberty.a
+    rm -rf ${D}${prefix}/lib/libiberty.a
     rm -rf ${D}${prefix}/include
     rm -rf ${D}${prefix}/share
 

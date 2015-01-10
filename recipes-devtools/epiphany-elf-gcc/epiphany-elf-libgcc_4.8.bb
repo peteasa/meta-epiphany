@@ -1,4 +1,4 @@
- 
+# 
 # For these recipes we may need to override TARGET and HOST whilst keeping 
 # variables derived from the original TARGET and HOST unchanged.
 # To do this create new variables to store the original TARGET and HOST
@@ -33,7 +33,7 @@ TARGET_EXEEXT_GVARIABLE := "${TARGET_EXEEXT}"
 #
 HOST_ARCH = "${TARGET_ARCH}"
 HOST_OS = "${TARGET_OS}"
-HOST_VENDOR = "${TARGET_VENDOR}"
+HOST_VENDOR = "${TARGET_VENDO}"
 HOST_SYS = "${TARGET_SYS}"
 HOST_PREFIX = "${TARGET_PREFIX}"
 HOST_CC_ARCH = "${TARGET_CC_ARCH}"
@@ -69,5 +69,6 @@ MULTIMACH_HOST_SYS = "${PACKAGE_ARCH}${HOST_VENDOR_GVARIABLE}-${HOST_OS_GVARIABL
 #
 # Now the script
 #
-require epiphany-elf-newlib-${PV}.inc
-require epiphany-elf-newlib.inc
+
+require epiphany-elf-gcc-${PV}.inc
+require epiphany-elf-libgcc.inc

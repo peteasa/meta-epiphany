@@ -24,55 +24,19 @@ LIC_FILES_CHKSUM="\
     "
 
 ENEWLIBBRANCH = "epiphany-newlib-1.20-software-cache"
-SRC_URI = " https://github.com/adapteva/epiphany-newlib.git;branch=${ENEWLIBBRANCH};name=${ENEWLIBBRANCH} \
+## https://github.com/adapteva/epiphany-newlib.git
+SRC_URI = " git:///home/pas/Projects/meta-yocto-parallella/epiphany-newlib.git;branch=${ENEWLIBBRANCH};name=${ENEWLIBBRANCH} \
           "
 
+# Tag: epiphany-newlib-esdk-2014.11
 SRCREV = "35a4aa0fd514c506cdd0f9043ee9248728db8ffc"
 
 # Language Overrides
 FORTRAN = ""
 JAVA = ""
 
-LTO = "--enable-lto"
-
-EXTRA_OECONF_BASE = "\
-    ${LTO} \
-    --enable-libssp \
-    --disable-bootstrap \
-    --disable-libmudflap \
-    --with-system-zlib \
-    --with-linker-hash-style=${LINKER_HASH_STYLE} \
-    --enable-linker-build-id \
-    --with-ppl=no \
-    --with-cloog=no \
-    --enable-checking=release \
-    --enable-cheaders=c_global \
-"
-
-EXTRA_OECONF_INITIAL = "\
-    --disable-libmudflap \
-    --disable-libgomp \
-    --disable-libssp \
-    --disable-libquadmath \
-    --with-system-zlib \
-    --disable-lto \
-    --disable-plugin \
-    --enable-decimal-float=no \
-"
-
-EXTRA_OECONF_INTERMEDIATE = "\
-    --disable-libmudflap \
-    --disable-libgomp \
-    --disable-libquadmath \
-    --with-system-zlib \
-    --disable-lto \
-    --disable-plugin \
-    --disable-libssp \
-"
-
-EXTRA_OECONF_append_libc-uclibc = " --disable-decimal-float "
-
-EXTRA_OECONF_PATHS = "\ 
+EXTRA_OECONF = " --enable-languages=c,c++ \
+    --with-cross-host=epiphany-elf \
     --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++/${BINV} \ 
     --with-sysroot=${STAGING_DIR_TARGET} \ 
     --with-build-sysroot=${STAGING_DIR_TARGET} \

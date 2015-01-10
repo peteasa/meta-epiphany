@@ -17,11 +17,15 @@ LIC_FILES_CHKSUM="\
     file://bfd/COPYING;md5=d32239bcb673463ab874e80d47fae504\
     "
 
-EBINUTILSBRANCH = "epiphany-binutils-2_23"
-SRC_URI = "https://github.com/adapteva/epiphany-binutils.git;branch=${EBINUTILSBRANCH};name=${EBINUTILSBRANCH} \
-     file://epiphany-elf-binutils-uclibc-300-001_ld_makefile_patch.patch \
+EBINUTILSBRANCH = "epiphany-binutils-2.23-software-cache"
+## https://github.com/adapteva/epiphany-binutils-gdb.git
+SRC_URI = "git:///home/pas/Projects/meta-yocto-parallella/epiphany-binutils-gdb.git;branch=${EBINUTILSBRANCH};name=${EBINUTILSBRANCH} \
      file://epiphany-elf-binutils-bfd-libdir.patch \
      file://epiphany-elf-binutils-opcodes-libdir.patch \
           "
 
-SRCREV = "2a5ae813deb8eb663e7286a1e517f166a40d801e"
+#      file://epiphany-elf-binutils-uclibc-300-001_ld_makefile_patch.patch
+
+# Tag: epiphany-binutils-esdk-2014.11
+SRCREV = "cb1b5279004381d35c27a501e582e1eb4d5c4cba"
+

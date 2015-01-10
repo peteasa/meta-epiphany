@@ -1,15 +1,15 @@
 require epiphany-elf-newlib-common.inc
 
-DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
+DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
 
 # Add paths of HOST and TARGET compilers
-PATH_prepend = "${STAGING_BINDIR_TOOLCHAIN}:${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}:"
+# PATH_prepend = "${STAGING_BINDIR_TOOLCHAIN}:${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_SYS}:"
 
 # fix up commands used for packaging
-export RANLIB = "${TARGET_SYS}-ranlib"
-export OBJCOPY = "${TARGET_SYS}-objcopy"
-export OBJDUMP = "${TARGET_SYS}-objdump"
-export STRIP = "${TARGET_SYS}-strip"
+#export RANLIB = "${TARGET_SYS}-ranlib"
+#export OBJCOPY = "${TARGET_SYS}-objcopy"
+#export OBJDUMP = "${TARGET_SYS}-objdump"
+#export STRIP = "${TARGET_SYS}-strip"
 
 PACKAGES = "\
     ${PN} \
@@ -34,7 +34,7 @@ do_install_append () {
     rm -rf ${D}/${prefix}/${TARGET_SYS}/lib
 }
 
-NEWLIBBUILDTREENAME = "gcc-build-internal-"
+NEWLIBBUILDTREENAME = "newlib-build-internal-"
 
 do_package[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
