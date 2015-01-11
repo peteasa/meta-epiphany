@@ -12,6 +12,8 @@ PACKAGES = "\
 
 FILES_${PN} = "${base_libdir}/libgcc*.so.*"
 
+ALLOW_EMPTY_${PN} = "1"
+
 FILES_${PN}-dev = "\
     ${libdir}/gcc/${TARGET_SYS}/${BINV}/*crt* \
     ${libdir}/gcc/${TARGET_SYS}/${BINV}/libgcc* \

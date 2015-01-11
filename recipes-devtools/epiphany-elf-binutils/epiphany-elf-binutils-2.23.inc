@@ -28,4 +28,3 @@ SRC_URI = "git:///home/pas/Projects/meta-yocto-parallella/epiphany-binutils-gdb.
 
 # Tag: epiphany-binutils-esdk-2014.11
 SRCREV = "cb1b5279004381d35c27a501e582e1eb4d5c4cba"
-

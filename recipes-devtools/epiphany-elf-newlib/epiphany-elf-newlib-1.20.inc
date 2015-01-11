@@ -41,4 +41,3 @@ EXTRA_OECONF = " --enable-languages=c,c++ \
     --with-sysroot=${STAGING_DIR_TARGET} \ 
     --with-build-sysroot=${STAGING_DIR_TARGET} \
 "
-
