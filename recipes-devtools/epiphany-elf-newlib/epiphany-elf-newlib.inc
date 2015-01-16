@@ -2,15 +2,6 @@ require epiphany-elf-newlib-common.inc
 
 DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
 
-# Add paths of HOST and TARGET compilers
-# PATH_prepend = "${STAGING_BINDIR_TOOLCHAIN}:${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_SYS}:"
-
-# fix up commands used for packaging
-#export RANLIB = "${TARGET_SYS}-ranlib"
-#export OBJCOPY = "${TARGET_SYS}-objcopy"
-#export OBJDUMP = "${TARGET_SYS}-objdump"
-#export STRIP = "${TARGET_SYS}-strip"
-
 PACKAGES = "\
     ${PN} \
     ${PN}-dev \
@@ -44,3 +35,7 @@ do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 INSANE_SKIP_${PN}-staticdev = "arch"
 INSANE_SKIP_${PN}-dbg += "arch"
 
+## look at package_rpm.bbclass -
+## need to override pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-poky-linux-gnueabi')
+## at the moment it looks like pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-e-os')
+HOST_OS="poky-linux-gnueabi"

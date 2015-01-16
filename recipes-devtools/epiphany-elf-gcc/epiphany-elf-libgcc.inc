@@ -32,3 +32,8 @@ do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 INSANE_SKIP_${PN}-dev = "staticdev"
 INSANE_SKIP_${PN}-libgcov = "staticdev"
 
+## look at package_rpm.bbclass -
+## need to override pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-poky-linux-gnueabi')
+## at the moment it looks like pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-e-os')
+TARGET_VENDO="-poky-linux"
+HOST_OS="gnueabi"

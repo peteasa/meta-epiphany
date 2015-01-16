@@ -72,7 +72,8 @@ MULTIMACH_HOST_SYS = "${PACKAGE_ARCH}${HOST_VENDOR_GVARIABLE}-${HOST_OS_GVARIABL
 
 # TODO add in newlib once this is debugged virtual/${TARGET_PREFIX}newlib
 BASEDEPENDS := "virtual/${HOST_PREFIX}gcc \
-            virtual/${TARGET_PREFIX}binutils"
+               virtual/${TARGET_PREFIX}binutils \
+               "
 
 require epiphany-elf-gcc-${PV}.inc
 require epiphany-elf-gcc-target.inc

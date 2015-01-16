@@ -1,7 +1,7 @@
 
 require epiphany-elf-gcc-configure-common.inc
 
-DEPENDS =+ "virtual/${TARGET_SYS}-gcc"
+DEPENDS =+ "virtual/${TARGET_SYS}-gcc ${TARGET_SYS}-newlib ${TARGET_SYS}-libgcc"
 
 # Add paths of HOST and TARGET compilers
 PATH_prepend = "${STAGING_BINDIR_TOOLCHAIN}:${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_SYS}:"
@@ -75,6 +75,8 @@ FILES_${PN}-plugin-dev = "\
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/plugin/gengtype \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/gtype.state \
 "
+ALLOW_EMPTY_${PN}-plugin-dev = "1"
+
 #oops something gone wrong -    ${bindir}/epiphany-elf-gccbug 
 FILES_${PN}-symlinks = "\
     ${bindir}/epiphany-elf-gcc \

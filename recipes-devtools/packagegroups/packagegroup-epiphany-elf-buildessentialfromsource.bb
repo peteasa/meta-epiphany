@@ -5,10 +5,7 @@ SUMMARY = "Essential build dependencies"
 LICENSE = "GPL"
 
 inherit packagegroup
-#oops something gone wrong - epiphany-elf-cpp-symlinks 
-#oops something gone wrong - epiphany-elf-gcc-plugin-dev 
-#oops something gone wrong - epiphany-elf-libgcc*
-#oops something gone wrong - epiphany-elf-newlib*
+
 RDEPENDS_packagegroup-epiphany-elf-buildessentialfromsource = "\
     autoconf \
     automake \
@@ -19,6 +16,7 @@ RDEPENDS_packagegroup-epiphany-elf-buildessentialfromsource = "\
     epiphany-elf-binutils-symlinks \
     epiphany-elf-gcc \
     epiphany-elf-gcc-plugins \
+    epiphany-elf-gcc-plugin-dev \
     epiphany-elf-gcc-symlinks \
     epiphany-elf-g++ \
     epiphany-elf-g++-symlinks \
@@ -26,6 +24,13 @@ RDEPENDS_packagegroup-epiphany-elf-buildessentialfromsource = "\
     epiphany-elf-gcc-doc \
     epiphany-elf-gcc-dev \
     epiphany-elf-gcc-dbg \
+    epiphany-elf-libgcc \
+    epiphany-elf-libgcc-dev \
+    epiphany-elf-libgcc-libgcov \
+    epiphany-elf-newlib \
+    epiphany-elf-newlib-staticdev \
+    epiphany-elf-newlib-dev \
+    epiphany-elf-newlib-dbg \        
     gettext \
     make \
     libtool \
