@@ -23,6 +23,9 @@ FILES_${PN}-staticdev = "	\
     ${prefix}/lib/${TARGET_SYS}/*.a \
 	"
 
+# debugedit chokes on bare metal binaries
+INHIBIT_PACKAGE_STRIP = "1"
+
 NEWLIBBUILDTREENAME = "newlib-build-internal-"
 
 do_package[depends] += "virtual/${MLPREFIX}libc:do_packagedata"

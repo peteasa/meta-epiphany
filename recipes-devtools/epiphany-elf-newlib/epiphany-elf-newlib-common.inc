@@ -12,8 +12,6 @@ BUGTRACKER = "https://github.com/adapteva/epiphany-newlib/issues"
 SECTION = "devel"
 LICENSE = "GPLv3"
 
-BUGTRACKER = "https://github.com/adapteva/epiphany-newlib/issues"
-
 NATIVEDEPS = ""
 
 inherit autotools gettext texinfo
