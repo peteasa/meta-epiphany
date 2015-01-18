@@ -24,11 +24,9 @@ BPN = "epiphany-elf-gcc"
 #
 
 BINV = "${PV}"
-#S = "${WORKDIR}/epiphany-elf-gcc-${PV}"
-#S = "${TMPDIR}/work-shared/epiphany-elf-gcc-${PV}-${PR}/epiphany-elf-gcc-${PV}"
+
 S = "${TMPDIR}/work-shared/epiphany-elf-gcc-${PV}-${PR}/git"
-#B = "${WORKDIR}/epiphany-elf-gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
-B = "${WORKDIR}/git/build.${HOST_SYS}.${TARGET_SYS}"
+B = "${WORKDIR}/epiphany-elf-gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 
 # SS means Shared Stamps directory
 SS = "${TMPDIR}/stamps/work-shared/epiphany-elf-gcc-${PV}-${PR}"

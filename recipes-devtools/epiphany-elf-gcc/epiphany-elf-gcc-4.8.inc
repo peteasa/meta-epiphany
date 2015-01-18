@@ -81,9 +81,6 @@ SRC_URI = " git:///home/pas/Projects/meta-yocto-parallella/epiphany-gcc.git;bran
 # Tag: epiphany-gcc-esdk-2014.11
 SRCREV = "005a35955747a2da8a48afdbbe00d80a12e41dde"
 
-S = "${TMPDIR}/work-shared/epiphany-elf-gcc-${PV}-${PR}/git"
-B = "${WORKDIR}/epiphany-elf-gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
-
 # Language Overrides
 FORTRAN = ""
 JAVA = ""

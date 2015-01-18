@@ -1,3 +1,7 @@
+##
+## modelled on gcc-common.inc
+##
+
 SUMMARY = "GNU newlib ANSI C libraries for epiphany processor"
 DESCRIPTION = "GNU newlib is a simple ANSI C library, math library, and \
 collection of board support packages"
@@ -8,6 +12,8 @@ BUGTRACKER = "https://github.com/adapteva/epiphany-newlib/issues"
 SECTION = "devel"
 LICENSE = "GPLv3"
 
+BUGTRACKER = "https://github.com/adapteva/epiphany-newlib/issues"
+
 NATIVEDEPS = ""
 
 inherit autotools gettext texinfo
@@ -17,8 +23,10 @@ INHIBIT_DEFAULT_DEPS = "1"
 #
 # Set some default values
 #
-#gcclibdir = "${libdir}/gcc"
+
 BINV = "${PV}"
+
+# Source and Build shared by newlib and libgloss
 #S = "${WORKDIR}/epiphany-elf-newlib-${PV}"
 #S = "${TMPDIR}/work-shared/epiphany-elf-gcc-${PV}-${PR}/epiphany-elf-newlib-${PV}"
 
@@ -47,21 +55,19 @@ WORKDIR_task-unpack = "${SW}"
 WORKDIR_task-patch = "${SW}"
 WORKDIR_task-preconfigure = "${SW}"
 
+oldincludedir="${exec_prefix}/${TARGET_SYS}/include"
+includedir="${exec_prefix}/${TARGET_SYS}/include"
+# install the runtime in /usr/lib/epiphany-elf not in /usr/epiphany-elf/lib on target
+## TODO add reason
+# Update bitbake.conf setting - libdir="${exec_prefix}/${baselib}"
+libdir="${exec_prefix}/${baselib}/${TARGET_SYS}"
+# Update bitbake.conf setting - libexecdir = "${libdir}/${BPN}"
+libexecdir="${exec_prefix}/${baselib}/${TARGET_SYS}"
+
 target_includedir ?= "${includedir}"
 target_libdir ?= "${libdir}"
 target_base_libdir ?= "${base_libdir}"
 target_prefix ?= "${prefix}"
-
-# fix up commands used for packaging
-#export OBJCOPY = "${TARGET_SYS}-objcopy"
-
-#export AR = "${HOST_PREFIX}ar"
-#export AS = "${HOST_PREFIX}as"
-#export LD = "${HOST_PREFIX}ld"
-#export NM = "${HOST_PREFIX}nm"
-#export RANLIB = "${HOST_PREFIX}ranlib"
-#export OBJCOPY = "${HOST_PREFIX}objcopy"
-#export OBJDUMP = "${HOST_PREFIX}objdump"
 
 export CC_FOR_TARGET="${TARGET_PREFIX}gcc"
 export GCC_FOR_TARGET="${TARGET_PREFIX}gcc"
@@ -98,124 +104,3 @@ python workshared_clean () {
 src_patches[vardepsexclude] = "WORKDIR"
 should_apply[vardepsexclude] += "PN"
 
-do_configure () {
-    target=${TARGET_SYS}
-	install -d ${D}${base_libdir} ${D}${libdir}
-    mkdir -p ${STAGING_INCDIR_NATIVE}/${NEWLIBBUILDTREENAME}$target/
-	# hardlinkdir ${STAGING_INCDIR_NATIVE}/${NEWLIBBUILDTREENAME}$target/ ${B}
-	mkdir -p ${B}
-	# mkdir -p ${B}/$target
-	cd ${B}
-	chmod a+x ${S}/newlib/configure
-	${S}/newlib/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
-}
-
-do_compile () {
-    target=${TARGET_SYS}
-	cd ${B}
-	oe_runmake MULTIBUILDTOP=${B}/$target/
-}
-
-do_install () {
-    target=${TARGET_SYS}
-	cd ${B}
-	oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/$target/ install
-
-	# install the runtime in /usr/lib/epiphany-elf not in /usr/epiphany-elf/lib on target
-	# so that cross-gcc can find it in the sysroot
-
-    mkdir -p ${D}${libdir}/$target
-	mv ${D}/usr/$target/lib/* ${D}${libdir}/$target
-}
-
-BBCLASSEXTEND = "nativesdk"
-
-addtask multilib_install after do_install before do_package do_populate_sysroot
-# this makes multilib gcc files findable for target gcc
-# e.g.
-#    /usr/lib/i586-pokymllib32-linux/4.7/
-# by creating this symlink to it
-#    /usr/lib64/x86_64-poky-linux/4.7/32
-
-python do_multilib_install() {
-    import re
-
-    multilibs = d.getVar('MULTILIB_VARIANTS', True)
-    if not multilibs or bb.data.inherits_class('nativesdk', d):
-        return
-
-    binv = d.getVar('BINV', True)
-
-    mlprefix = d.getVar('MLPREFIX', True)
-    if ('%slibgcc' % mlprefix) != d.getVar('PN', True):
-        return
-
-    if mlprefix:
-        orig_tune = d.getVar('DEFAULTTUNE_MULTILIB_ORIGINAL', True)
-        orig_tune_params = get_tune_parameters(orig_tune, d)
-        orig_tune_baselib = orig_tune_params['baselib']
-        orig_tune_bitness = orig_tune_baselib.replace('lib', '')
-        if not orig_tune_bitness:
-            orig_tune_bitness = '32'
-
-        src = '../../../' + orig_tune_baselib + '/' + \
-            d.getVar('TARGET_SYS_MULTILIB_ORIGINAL', True) + '/' + binv + '/'
-
-        dest = d.getVar('D', True) + d.getVar('libdir', True) + '/' + \
-            d.getVar('TARGET_SYS', True) + '/' + binv + '/' + orig_tune_bitness
-
-        if os.path.lexists(dest):
-            os.unlink(dest)
-        os.symlink(src, dest)
-        return
-
-
-    for ml in multilibs.split():
-        tune = d.getVar('DEFAULTTUNE_virtclass-multilib-' + ml, True)
-        if not tune:
-            bb.warn('DEFAULTTUNE_virtclass-multilib-%s is not defined. Skipping...' % ml)
-            continue
-
-        tune_parameters = get_tune_parameters(tune, d)
-        tune_baselib = tune_parameters['baselib']
-        if not tune_baselib:
-            bb.warn("Tune %s doesn't have a baselib set. Skipping..." % tune)
-            continue
-
-        tune_arch = tune_parameters['arch']
-        tune_bitness = tune_baselib.replace('lib', '')
-        if not tune_bitness:
-            tune_bitness = '32' # /lib => 32bit lib
-
-        src = '../../../' + tune_baselib + '/' + \
-            tune_arch + d.getVar('TARGET_VENDOR', True) + 'ml' + ml + \
-            '-' + d.getVar('TARGET_OS', True) + '/' + binv + '/'
-
-        dest = d.getVar('D', True) + d.getVar('libdir', True) + '/' + \
-            d.getVar('TARGET_SYS', True) + '/' + binv + '/' + tune_bitness
-
-        if os.path.lexists(dest):
-            os.unlink(dest)
-        os.symlink(src, dest)
-}
-
-addtask extra_symlinks after do_multilib_install before do_package do_populate_sysroot
-python do_extra_symlinks() {
-    targetsysnoext = d.getVar('TARGET_SYS_NO_EXTENSION', True)
-
-    if targetsysnoext != d.getVar('TARGET_SYS', True):
-        dest = d.getVar('D', True) + d.getVar('libdir', True) + '/' + targetsysnoext
-        src = d.getVar('TARGET_SYS', True)
-        if not os.path.lexists(dest) and os.path.lexists(d.getVar('D', True) + d.getVar('libdir', True)):
-            os.symlink(src, dest)
-}
-
-python () {
-    targetsysnoext = d.getVar('TARGET_SYS', True)
-
-    for suffix in [d.getVar('ABIEXTENSION', True), d.getVar('LIBCEXTENSION', True)]:
-        if suffix and targetsysnoext.endswith(suffix):
-            targetsysnoext = targetsysnoext[:-len(suffix)]
-
-    d.setVar('TARGET_SYS_NO_EXTENSION', targetsysnoext)
-}

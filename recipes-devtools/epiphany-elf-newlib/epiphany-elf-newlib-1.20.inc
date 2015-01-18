@@ -1,3 +1,8 @@
+##
+## modelled on gcc-${PV}.inc
+##
+
+require epiphany-elf-newlib-common.inc
 
 # Third digit in PV should be incremented after a minor release
 

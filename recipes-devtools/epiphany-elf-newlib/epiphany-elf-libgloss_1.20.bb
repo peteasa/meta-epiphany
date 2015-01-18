@@ -1,4 +1,4 @@
-# 
+ 
 # For these recipes we may need to override TARGET and HOST whilst keeping 
 # variables derived from the original TARGET and HOST unchanged.
 # To do this create new variables to store the original TARGET and HOST
@@ -31,15 +31,15 @@ TARGET_EXEEXT_GVARIABLE := "${TARGET_EXEEXT}"
 #
 # Now update HOST and TARGET variables
 #
-HOST_ARCH = "${HOST_ARCH_GVARIABLE}"
-HOST_OS = "${HOST_OS_GVARIABLE}"
-HOST_VENDOR = "${HOST_VENDOR_GVARIABLE}"
-HOST_SYS = "${HOST_SYS_GVARIABLE}"
-HOST_PREFIX = "${HOST_PREFIX_GVARIABLE}"
-HOST_CC_ARCH = "${HOST_CC_ARCH_GVARIABLE}"
-HOST_LD_ARCH = "${HOST_LD_ARCH_GVARIABLE}"
-HOST_AS_ARCH = "${HOST_AS_ARCH_GVARIABLE}"
-HOST_EXEEXT = "${HOST_EXEEXT_GVARIABLE}"
+HOST_ARCH = "${TARGET_ARCH}"
+HOST_OS = "${TARGET_OS}"
+HOST_VENDOR = "${TARGET_VENDOR}"
+HOST_SYS = "${TARGET_SYS}"
+HOST_PREFIX = "${TARGET_PREFIX}"
+HOST_CC_ARCH = "${TARGET_CC_ARCH}"
+HOST_LD_ARCH = "${TARGET_LD_ARCH}"
+HOST_AS_ARCH = "${TARGET_AS_ARCH}"
+HOST_EXEEXT = "${TARGET_EXEEXT}"
 TARGET_ARCH = "epiphany"
 TARGET_OS = "e-os"
 TARGET_VENDOR = ""
@@ -53,7 +53,7 @@ TARGET_EXEEXT = ""
 # TODO update these as appropriate!
 #TARGET_CFLAGS = 
 #TARGET_CXXFLAGS = 
-#TARGET_LDFLAGS = 
+TARGET_LDFLAGS = "-Wl,-O1 -Wl, -Wl,--as-needed"
 
 #
 # Now all the scripts in this recipe can use TARGET_??
@@ -62,17 +62,12 @@ TARGET_EXEEXT = ""
 #
 # For example override STAGING_BINDIR_TOOLCHAIN to match original TARGET
 #
-STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_ARCH_GVARIABLE}${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"
+STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_SYS}"
 MULTIMACH_TARGET_SYS = "${PACKAGE_ARCH}${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"
 MULTIMACH_HOST_SYS = "${PACKAGE_ARCH}${HOST_VENDOR_GVARIABLE}-${HOST_OS_GVARIABLE}"
 
 #
 # Now the script
 #
-
-BASEDEPENDS := "virtual/${HOST_PREFIX}gcc \
-               virtual/${TARGET_PREFIX}binutils \
-               "
-
-require epiphany-elf-gcc-${PV}.inc
-require epiphany-elf-gcc-target.inc
+require epiphany-elf-newlib-${PV}.inc
+require epiphany-elf-libgloss.inc

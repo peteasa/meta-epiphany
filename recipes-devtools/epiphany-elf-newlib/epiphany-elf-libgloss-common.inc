@@ -1,4 +1,8 @@
-BPN = "libgcc"
+##
+## modelled on libgcc-common.inc
+##
+
+BPN = "libgloss"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -8,10 +12,8 @@ TUNE_CCARGS=""
 
 do_configure () {
 	target=${TARGET_SYS}
-	install -d ${D}${base_libdir} ${D}${libdir}
+	install -d ${D}${libdir}
 
-	hardlinkdir ${STAGING_INCDIR_NATIVE}/../${TARGET_SYS}/include/${EPIPHANYLIBGCCBUILDTREENAME}$target/ ${B}
-	## mkdir -p ${B}/${BPN}
 	mkdir -p ${B}/$target/${BPN}/
 	cd ${B}/$target/${BPN}
 	chmod a+x ${S}/${BPN}/configure
@@ -29,11 +31,13 @@ do_install () {
 	cd ${B}/$target/${BPN}
 	oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/$target/${BPN}/ install
 
-	# unwind.h is installed here which is shipped in gcc-cross
-	# as well as target gcc and they are identical so we dont
-	# ship one with libgcc here
-	rm -rf ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include
+	# install the runtime in /usr/lib/epiphany-elf not in /usr/epiphany-elf/lib on target
+    ## TODO add reason
+    mkdir -p ${D}${libdir}
+	mv ${D}/usr/$target/lib/* ${D}${libdir}
+
+    # Tidy up remaining folders
+    rm -rf ${D}/${prefix}/${TARGET_SYS}
 }
 
 BBCLASSEXTEND = "nativesdk"
-

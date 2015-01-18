@@ -31,6 +31,10 @@ RDEPENDS_packagegroup-epiphany-elf-buildessentialfromsource = "\
     epiphany-elf-newlib-staticdev \
     epiphany-elf-newlib-dev \
     epiphany-elf-newlib-dbg \        
+    epiphany-elf-libgloss \
+    epiphany-elf-libgloss-staticdev \
+    epiphany-elf-libgloss-dev \
+    epiphany-elf-libgloss-dbg \        
     gettext \
     make \
     libtool \
