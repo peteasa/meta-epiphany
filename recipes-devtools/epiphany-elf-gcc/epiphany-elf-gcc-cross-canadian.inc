@@ -5,12 +5,29 @@ PN = "epiphany-elf-gcc-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
 DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${HOST_PREFIX}binutils-crosssdk virtual/nativesdk-${HOST_PREFIX}libc-for-gcc nativesdk-gettext"
 
+require epiphany-elf-gcc-configure-common.inc
+
 EXTRA_OECONF_PATHS = "\
-    --with-gxx-include-dir=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}${target_includedir}/c++/${BINV} \
+    --with-gxx-include-dir=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}${target_includedir}/c++/${BINV} \
     --with-build-time-tools=${STAGING_DIR_NATIVE}${prefix_native}/${TARGET_SYS}/bin \
-    --with-sysroot=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS} \
+    --with-sysroot=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE} \
     --with-build-sysroot=${STAGING_DIR_TARGET} \
 "
+
+# Override things set in cross-canadian
+STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${SDK_VENDOR}-${SDK_OS}:${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_SYS}"
+STAGING_BINDIR_CROSS = "${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_SYS}"
+
+#base_prefix = "${SDKPATHNATIVE}"
+#prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
+#exec_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
+bindir = "${exec_prefix}/bin/${TARGET_SYS}"
+sbindir = "${bindir}"
+base_bindir = "${bindir}"
+base_sbindir = "${bindir}"
+libdir = "${exec_prefix}/lib/${TARGET_SYS}"
+libexecdir = "${exec_prefix}/lib/${TARGET_SYS}"
+
 # We have to point gcc at a sysroot but we don't need to rebuild if this changes
 # e.g. we switch between different machines with different tunes.
 EXTRA_OECONF_PATHS[vardepsexclude] = "TUNE_PKGARCH"
@@ -66,7 +83,7 @@ EXCLUDE_FROM_SHLIBS = "1"
 PACKAGES = "${PN} ${PN}-doc"
 
 FILES_${PN} = "\
-    ${exec_prefix}/bin/* \
+    ${exec_prefix}/bin/${TARGET_SYS}/* \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/* \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/*.o \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/specs \
@@ -98,21 +115,19 @@ do_install () {
 	oe_runmake 'DESTDIR=${D}' install-host
 
 	# Cleanup some of the ${libdir}{,exec}/gcc stuff ...
-	rm -r ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
-	rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
-	rm -rf ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/finclude
+	# rm -r ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
+	# rm -r ${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/install-tools
+	# rm -rf ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/finclude
 
 	# We care about g++ not c++
 	rm -f ${D}${bindir}/*c++
 
 	# We don't care about the gcc-<version> copies
 	rm -f ${D}${bindir}/*gcc-?.?*
+	rm -rf ${D}${prefix}/${TARGET_SYS}
 
 	# We use libiberty from binutils
-	rm -f ${D}${prefix}/${TARGET_SYS}/lib/libiberty.a
-	# Not sure where the strange paths come from
-	rm -f ${D}${libdir}/../lib/libiberty.a
-	rm -f ${D}${libdir}/libiberty.a
+	rm -rf ${D}${prefix}/lib/lib
 
 	# Cleanup empty directories which are not shipped
 	# we use rmdir instead of 'rm -f' to ensure the non empty directories are not deleted
@@ -152,6 +167,22 @@ RDEPENDS_${PN} += "nativesdk-mpfr nativesdk-libmpc ${ELFUTILS}"
 SYSTEMHEADERS = "/usr/include"
 SYSTEMLIBS = "${target_base_libdir}/"
 SYSTEMLIBS1 = "${target_libdir}/"
+
+EXTRA_OECONF = "\
+    --enable-multilib \
+    --disable-gdbtk \
+    --disable-werror \
+    --enable-fast-install=N/A \
+    --without-included-gettext \
+    --enable-languages=c,c++ \
+    --enable-linker-build-id \
+    --disable-libmudflap \
+    --disable-libitm \
+    --enable-plugin \
+    --with-newlib \
+    --program-prefix=${TARGET_PREFIX} \
+    ${EXTRA_OECONF_PATHS} \
+"
 
 EXTRA_OECONF += "--enable-poison-system-directories"
 
