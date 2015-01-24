@@ -60,36 +60,38 @@ PROVIDES = "virtual/${TARGET_PREFIX}compilerlibs"
 
 PACKAGES = "\
     ${PN}-dbg \
-    libstdc++ \
-    libstdc++-precompile-dev \
-    libstdc++-dev \
-    libstdc++-staticdev \
-    libg2c \
-    libg2c-dev \
+    ${PN}-libstdc++ \
+    ${PN}-libstdc++-dev \
+    ${PN}-libstdc++-staticdev \
 "
 # The base package doesn't exist, so we clear the recommends.
 RRECOMMENDS_${PN}-dbg = ""
 
 # include python debugging scripts
 FILES_${PN}-dbg += "\
-    ${libdir}/libstdc++.so.*-gdb.py \
+    ${libdir}/libstdc++.*-gdb.py \
     ${datadir}/gcc-${BINV}/python/libstdcxx \
 "
 
-FILES_libstdc++ = "${libdir}/libstdc++.so.*"
-FILES_libstdc++-dev = "\
+FILES_${PN}-libstdc++ = "${libdir}/libstdc++.so.*"
+FILES_${PN}-libstdc++-dev = "\
     ${includedir}/c++/ \
     ${libdir}/libstdc++.so \
     ${libdir}/libstdc++.la \
     ${libdir}/libsupc++.la \
 "
-FILES_libstdc++-staticdev = "\
+FILES_${PN}-libstdc++-staticdev = "\
     ${libdir}/libstdc++.a \
     ${libdir}/libsupc++.a \
 "
 
-FILES_libstdc++-precompile-dev = "${includedir}/c++/${TARGET_SYS}/bits/*.gch"
+# FILES_${PN}-libstdc++-precompile-dev = "${includedir}/c++/${TARGET_SYS}/bits/*.gch"
 
 do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 do_package_write_deb[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
+
+## look at package_rpm.bbclass -
+## need to override pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-poky-linux-gnueabi')
+## at the moment it looks like pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-e-os')
+HOST_OS="poky-linux-gnueabi"
