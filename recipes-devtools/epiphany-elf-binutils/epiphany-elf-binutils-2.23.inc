@@ -18,8 +18,7 @@ LIC_FILES_CHKSUM="\
     "
 
 EBINUTILSBRANCH = "epiphany-binutils-2.23-software-cache"
-## https://github.com/adapteva/epiphany-binutils-gdb.git
-SRC_URI = "git:///home/pas/Projects/meta-yocto-parallella/epiphany-binutils-gdb.git;branch=${EBINUTILSBRANCH};name=${EBINUTILSBRANCH} \
+SRC_URI = "https://github.com/adapteva/epiphany-binutils-gdb.git;branch=${EBINUTILSBRANCH};name=${EBINUTILSBRANCH} \
      file://epiphany-elf-binutils-bfd-libdir.patch \
      file://epiphany-elf-binutils-opcodes-libdir.patch \
           "
