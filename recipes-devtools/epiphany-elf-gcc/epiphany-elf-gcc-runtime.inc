@@ -52,8 +52,8 @@ do_install () {
 }
 
 INHIBIT_DEFAULT_DEPS = "1"
-## TODO work out why this DEPENDS on ${TARGET_PREFIX}gcc
-DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++ ${TARGET_PREFIX}libgcc ${TARGET_PREFIX}newlib ${TARGET_PREFIX}gcc"
+
+DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++ ${TARGET_PREFIX}libgcc ${TARGET_PREFIX}newlib"
 PROVIDES = "virtual/${TARGET_PREFIX}compilerlibs"
 
 BBCLASSEXTEND = "nativesdk"
