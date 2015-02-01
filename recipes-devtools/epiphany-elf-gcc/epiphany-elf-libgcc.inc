@@ -1,6 +1,6 @@
 require epiphany-elf-libgcc-common.inc
 
-DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
+DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++ ${TARGET_PREFIX}newlib"
 
 PACKAGES = "\
     ${PN} \

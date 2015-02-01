@@ -56,7 +56,8 @@ INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++ ${TARGET_PREFIX}libgcc ${TARGET_PREFIX}newlib"
 PROVIDES = "virtual/${TARGET_PREFIX}compilerlibs"
 
-BBCLASSEXTEND = "nativesdk"
+# Can we use the parallella-hdmi sysroot version for the sdk?  Uncomment if we need sdk version
+# BBCLASSEXTEND = "nativesdk"
 
 PACKAGES = "\
     ${PN}-dbg \
