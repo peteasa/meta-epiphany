@@ -18,7 +18,8 @@ LIC_FILES_CHKSUM="\
     "
 
 EBINUTILSBRANCH = "epiphany-binutils-2.23-software-cache"
-SRC_URI = "https://github.com/adapteva/epiphany-binutils-gdb.git;branch=${EBINUTILSBRANCH};name=${EBINUTILSBRANCH} \
+SRC_URI = "git://github.com/adapteva/epiphany-binutils-gdb.git;branch=${EBINUTILSBRANCH};name=${EBINUTILSBRANCH} "
+SRC_URI += " \
      file://epiphany-elf-binutils-bfd-libdir.patch \
      file://epiphany-elf-binutils-opcodes-libdir.patch \
           "

@@ -29,8 +29,7 @@ LIC_FILES_CHKSUM="\
     "
 
 ENEWLIBBRANCH = "epiphany-newlib-1.20-software-cache"
-## https://github.com/adapteva/epiphany-newlib.git
-SRC_URI = " git:///home/pas/Projects/meta-yocto-parallella/epiphany-newlib.git;branch=${ENEWLIBBRANCH};name=${ENEWLIBBRANCH} \
+SRC_URI = " git://github.com/adapteva/epiphany-newlib.git;branch=${ENEWLIBBRANCH};name=${ENEWLIBBRANCH} \
           "
 
 # Tag: epiphany-newlib-esdk-2014.11

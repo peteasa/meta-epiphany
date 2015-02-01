@@ -24,8 +24,9 @@ LIC_FILES_CHKSUM = "\
 "
 
 EGCCBRANCH = "epiphany-gcc-4.8-software-cache"
-## git:https://github.com/adapteva/epiphany-gcc.git
-SRC_URI = " git:///home/pas/Projects/meta-yocto-parallella/epiphany-gcc.git;branch=${EGCCBRANCH};name=${EGCCBRANCH} \
+SRC_URI = " git://github.com/adapteva/epiphany-gcc.git;branch=${EGCCBRANCH};name=${EGCCBRANCH} "
+
+SRC_URI += " \
     file://0002-uclibc-conf.patch \
     file://0003-gcc-uclibc-locale-ctype_touplow_t.patch \
     file://0004-uclibc-locale.patch \
