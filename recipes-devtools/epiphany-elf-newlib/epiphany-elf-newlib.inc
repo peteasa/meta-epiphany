@@ -4,7 +4,11 @@
 ##          also much simpler so significant parts taken from libgcc
 ##
 
+# TODO double check the depends and provides.. epiphany-elf-gcc-runtime needs this
+#      does virtual/${TARGET_PREFIX}gcc also need an initial version of this?
+
 DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
+PROVIDES += "virtual/${TARGET_PREFIX}libc-for-gcc"
 
 PACKAGES = "\
     ${PN} \

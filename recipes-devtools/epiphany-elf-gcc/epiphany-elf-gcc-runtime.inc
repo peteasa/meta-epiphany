@@ -1,5 +1,7 @@
 require epiphany-elf-gcc-configure-common.inc
 
+DEPENDS += "virtual/${TARGET_PREFIX}libc-for-gcc"
+
 CXXFLAGS := "${@oe_filter_out('-fvisibility-inlines-hidden', '${CXXFLAGS}', d)}"
 
 EXTRA_OECONF_PATHS = "\
