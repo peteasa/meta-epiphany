@@ -1,3 +1,10 @@
+##################################################################
+# Part two of this refactoring will move this file to
+# exotic-newlib-1.20.inc
+# But the exotic version will reference normal newlib and 
+# as a result the .bb file will have to override SRC_URI
+##################################################################
+
 ##
 ## modelled on gcc-${PV}.inc
 ##
@@ -40,7 +47,7 @@ FORTRAN = ""
 JAVA = ""
 
 EXTRA_OECONF = " --enable-languages=c,c++ \
-    --with-cross-host=epiphany-elf \
+    --with-cross-host=${EXOTIC_TARGET_SYS} \
     --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++/${BINV} \ 
     --with-sysroot=${STAGING_DIR_TARGET} \ 
     --with-build-sysroot=${STAGING_DIR_TARGET} \

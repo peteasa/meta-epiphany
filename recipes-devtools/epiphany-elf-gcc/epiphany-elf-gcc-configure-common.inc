@@ -1,33 +1,12 @@
+##################################################################
+# Part two of this refactoring will move this file to
+# exotic-gcc-configure-common.inc
+##################################################################
 
 EXTRA_OECONF_BASE ?= ""
 EXTRA_OECONF_PATHS ?= ""
 EXTRA_OECONF_INITIAL ?= ""
 EXTRA_OECONF_INTERMEDIATE ?= ""
-
-# wanted /usr/lib/gcc/epiphany-elf/4.8.2/ etc but cant get this easily so move to
-# want /usr/lib/epiphany-elf/gcc/epiphany-elf/4.8.2/
-# --build=x86_64-linux --host=arm-poky-linux-gnueabi --target=epiphany-elf
-# --prefix=/usr --exec_prefix=/usr --bindir=/usr/bin --sbindir=/usr/sbin
-# --libexecdir=/usr/lib/gcc/epiphany-elf/4.8.2 --datadir=/usr/share --sysconfdir=/etc
-# --sharedstatedir=/com --localstatedir=/var --libdir=/usr/lib/gcc/epiphany-elf/4.8.2
-# --includedir=/usr/epiphany-elf/include --oldincludedir=/usr/epiphany-elf/include
-# --infodir=/usr/share/info --mandir=/usr/share/man --disable-silent-rules
-# --disable-dependency-tracking
-# --with-libtool-sysroot=/home/pas/Projects/meta-yocto-parallella/parallella-yoctobuild/build_parallella/tmp/sysroots/parallella-hdmi
-# --disable-gdbtk --disable-werror --enable-fast-install=N/A --without-included-gettext
-# --enable-languages=c,c++ --enable-shared --enable-linker-build-id
-# --program-prefix=epiphany-elf- --with-sysroot=/    
-# --with-build-sysroot=/home/pas/Projects/meta-yocto-parallella/parallella-yoctobuild/build_parallella/tmp/sysroots/parallella-hdmi
-# --with-native-system-header-dir=/home/pas/Projects/meta-yocto-parallella/parallella-yoctobuild/build_parallella/tmp/sysroots/parallella-hdmi/usr/epiphany-elf/include
-# --with-gxx-include-dir=/usr/epiphany-elf/include/c++/4.8.2  --enable-nls
-
-# gcc etc /usr/bin
-# ar etc /usr/arm-linux-gnueabi/bin
-# programs: =/usr/lib/epiphany-elf/arm-linux-gnueabi/4.7 .. c1 collect2 libgcca crtend.o etc
-# libraries: =/usr/epiphany-elf/lib .. crt1.0 crti.0 .... libc.a
-
-# TODO check --enable-shared --enable-multiarch  
-# TODO need to work out where c++ header files are provided for epiphany-elf-gcc-runtime
 
 EXTRA_OECONF = "\
     --enable-multilib \
@@ -41,7 +20,7 @@ EXTRA_OECONF = "\
     --disable-libitm \
     --enable-plugin \
     --with-newlib \
-    --program-prefix=${TARGET_PREFIX} \
+    --program-prefix=${EXOTIC_TARGET_PREFIX} \
     ${EXTRA_OECONF_PATHS} \
 "
 
@@ -80,10 +59,10 @@ do_configure () {
 	export CPPFLAGS_FOR_BUILD="${BUILD_CPPFLAGS}"
 	export CXXFLAGS_FOR_BUILD="${BUILD_CXXFLAGS}"
 	export LDFLAGS_FOR_BUILD="${BUILD_LDFLAGS}"
-	export CFLAGS_FOR_TARGET="${TARGET_CFLAGS}"
-	export CPPFLAGS_FOR_TARGET="${TARGET_CPPFLAGS}"
-	export CXXFLAGS_FOR_TARGET="${TARGET_CXXFLAGS}"
-	export LDFLAGS_FOR_TARGET="${TARGET_LDFLAGS}"
+	export CFLAGS_FOR_TARGET="${EXOTIC_TARGET_CFLAGS}"
+	export CPPFLAGS_FOR_TARGET="${EXOTIC_TARGET_CPPFLAGS}"
+	export CXXFLAGS_FOR_TARGET="${EXOTIC_TARGET_CXXFLAGS}"
+	export LDFLAGS_FOR_TARGET="${EXOTIC_TARGET_LDFLAGS}"
 
 
 	oe_runconf

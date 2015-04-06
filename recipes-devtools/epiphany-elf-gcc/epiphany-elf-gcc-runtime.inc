@@ -1,3 +1,8 @@
+##################################################################
+# Part two of this refactoring will move this file to
+# exotic-gcc-runtime.inc
+##################################################################
+
 require epiphany-elf-gcc-configure-common.inc
 
 CXXFLAGS := "${@oe_filter_out('-fvisibility-inlines-hidden', '${CXXFLAGS}', d)}"
@@ -18,9 +23,9 @@ RUNTIMETARGET = "libstdc++-v3"
 
 do_configure () {
 	export CXX="${CXX} -nostdinc++ -nostdlib++"
-	mtarget=${TARGET_SYS}
-	target=${TARGET_SYS}
-	hardlinkdir ${STAGING_INCDIR_NATIVE}/../${TARGET_SYS}/include/gcc-build-internal-$mtarget ${B}
+	mtarget=${EXOTIC_TARGET_SYS}
+	target=${EXOTIC_TARGET_SYS}
+	hardlinkdir ${STAGING_INCDIR_NATIVE}/../${EXOTIC_TARGET_SYS}/include/gcc-build-internal-$mtarget ${B}
 	for d in libgcc ${RUNTIMETARGET}; do
 		echo "Configuring $d"
 		rm -rf ${B}/$target/$d/
@@ -32,7 +37,7 @@ do_configure () {
 }
 
 do_compile () {
-	target=${TARGET_SYS}
+	target=${EXOTIC_TARGET_SYS}
 	for d in libgcc ${RUNTIMETARGET}; do
 		cd ${B}/$target/$d/
 		oe_runmake MULTIBUILDTOP=${B}/$target/$d/
@@ -40,7 +45,7 @@ do_compile () {
 }
 
 do_install () {
-	target=${TARGET_SYS}
+	target=${EXOTIC_TARGET_SYS}
 	for d in ${RUNTIMETARGET}; do
 		cd ${B}/$target/$d/
 		oe_runmake 'DESTDIR=${D}' MULTIBUILDTOP=${B}/$target/$d/ install
@@ -53,8 +58,8 @@ do_install () {
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++ ${TARGET_PREFIX}libgcc ${TARGET_PREFIX}newlib"
-PROVIDES = "virtual/${TARGET_PREFIX}compilerlibs"
+DEPENDS = "virtual/${EXOTIC_TARGET_PREFIX}gcc virtual/${EXOTIC_TARGET_PREFIX}g++ ${EXOTIC_TARGET_PREFIX}libgcc ${EXOTIC_TARGET_PREFIX}newlib"
+PROVIDES = "virtual/${EXOTIC_TARGET_PREFIX}compilerlibs"
 
 # Can we use the parallella-hdmi sysroot version for the sdk?  Uncomment if we need sdk version
 # BBCLASSEXTEND = "nativesdk"
@@ -86,13 +91,15 @@ FILES_${PN}-libstdc++-staticdev = "\
     ${libdir}/libsupc++.a \
 "
 
-# FILES_${PN}-libstdc++-precompile-dev = "${includedir}/c++/${TARGET_SYS}/bits/*.gch"
+# FILES_${PN}-libstdc++-precompile-dev = "${includedir}/c++/${EXOTIC_TARGET_SYS}/bits/*.gch"
 
 do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 do_package_write_deb[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 
+## Following causes a problem with the SDK creation!  HOST_OS is here fixed
+## so SDK build does not fully work
 ## look at package_rpm.bbclass -
 ## need to override pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-poky-linux-gnueabi')
 ## at the moment it looks like pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-e-os')
-HOST_OS="poky-linux-gnueabi"
+HOST_OS="${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"

@@ -1,11 +1,16 @@
-DEPENDS = "virtual/${TARGET_PREFIX}binutils ${NATIVEDEPS}"
-PROVIDES = "virtual/${TARGET_PREFIX}gcc-initial"
+##################################################################
+# Part two of this refactoring will move this file to
+# exotic-gcc-cross-initial.inc
+##################################################################
+
+DEPENDS = "virtual/${EXOTIC_TARGET_PREFIX}binutils ${NATIVEDEPS}"
+PROVIDES = "virtual/${EXOTIC_TARGET_PREFIX}gcc-initial"
 PACKAGES = ""
 
 INHIBIT_AUTOTOOLS_DEPS = "1"
 INHIBIT_DEFAULT_DEPS = "1"
 
-PN = "epiphany-elf-gcc-cross-initial-${TARGET_ARCH}"
+PN = "${EXOTIC_TARGET_PREFIX}gcc-cross-initial-${EXOTIC_TARGET_ARCH}"
 
 CROSS_TARGET_SYS_DIR_append = ".${PN}"
 
@@ -20,7 +25,7 @@ EXTRA_OECONF = "\
     --disable-__cxa_atexit \
     --enable-languages=c \
     ${OPTSPACE} \
-    --program-prefix=${TARGET_PREFIX} \
+    --program-prefix=${EXOTIC_TARGET_PREFIX} \
     --with-sysroot=${STAGING_DIR_TARGET} \
     --with-build-sysroot=${GCCCROSS_BUILDSYSROOT} \
     ${EXTRA_OECONF_INITIAL} \
@@ -43,7 +48,7 @@ do_compile () {
     oe_runmake all-gcc configure-target-libgcc
 }
 do_install () {
-	( cd ${B}/${TARGET_SYS}/libgcc; oe_runmake 'DESTDIR=${D}' install-unwind_h )
+	( cd ${B}/${EXOTIC_TARGET_SYS}/libgcc; oe_runmake 'DESTDIR=${D}' install-unwind_h )
 	oe_runmake 'DESTDIR=${D}' install-gcc
 
 	# We don't really need this (here shares/ contains man/, info/, locale/).
@@ -55,12 +60,12 @@ do_install () {
 
 	# Insert symlinks into libexec so when tools without a prefix are searched for, the correct ones are
 	# found. These need to be relative paths so they work in different locations.
-	dest=${D}${libexecdir}/gcc/${TARGET_SYS}/${BINV}/
+	dest=${D}${libexecdir}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
 	install -d $dest
 	useld=${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '.bfd', '', d)}
-	ln -sf ${BINRELPATH}/${TARGET_PREFIX}ld${useld} ${dest}ld
+	ln -sf ${BINRELPATH}/${EXOTIC_TARGET_PREFIX}ld${useld} ${dest}ld
 	for t in ar as nm objcopy objdump ranlib strip gcc cpp; do
-		ln -sf ${BINRELPATH}/${TARGET_PREFIX}$t $dest$t
+		ln -sf ${BINRELPATH}/${EXOTIC_TARGET_PREFIX}$t $dest$t
 	done
 	# fixed limits.h infact includes the so called real limits.h
 	# which should come from libc but when we build libc-initial
@@ -68,12 +73,12 @@ do_install () {
 	# includes real limits.h but this real limits.h is not staged yet
 	# so we overwirte the generated include-fixed/limits.h for gcc-cross-initial
 	# to get rid references to real limits.h
-	cp gcc/include-fixed/limits.h ${D}${gcclibdir}/${TARGET_SYS}/${BINV}/include/limits.h
+	cp gcc/include-fixed/limits.h ${D}${gcclibdir}/${EXOTIC_TARGET_SYS}/${BINV}/include/limits.h
 
 	# gcc-runtime installs libgcc into a special location in staging since it breaks doing a standalone build
 	case ${PN} in
-		*epiphany-elf-gcc-cross-initial-${TARGET_ARCH}|*epiphany-elf-gcc-crosssdk-initial-${TARGET_ARCH})
-			dest=${D}/${includedir}/gcc-build-internal-initial-${TARGET_SYS}
+		*${EXOTIC_TARGET_PREFIX}gcc-cross-initial-${EXOTIC_TARGET_ARCH}|*${EXOTIC_TARGET_PREFIX}gcc-crosssdk-initial-${EXOTIC_TARGET_ARCH})
+			dest=${D}/${includedir}/gcc-build-internal-initial-${EXOTIC_TARGET_SYS}
 			hardlinkdir . $dest
 		;;
 	esac

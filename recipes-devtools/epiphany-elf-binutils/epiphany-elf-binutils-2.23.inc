@@ -1,3 +1,8 @@
+##################################################################
+# Part two of this refactoring will require this content to
+# override the content in exotic-binutils-2.23.inc that will
+# itself be based on the official binutils-2.23 release.
+##################################################################
 
 # Ensure that ${S} points to the source location
 S = "${WORKDIR}/git"

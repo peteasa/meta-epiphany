@@ -1,10 +1,15 @@
+##################################################################
+# Part two of this refactoring will move this file to
+# exotic-libgloss.inc
+##################################################################
+
 ##
 ## modelled libgcc.inc
 ##
 
 require epiphany-elf-libgloss-common.inc
 
-DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++ ${TARGET_PREFIX}newlib"
+DEPENDS = "virtual/${EXOTIC_TARGET_PREFIX}binutils virtual/${EXOTIC_TARGET_PREFIX}gcc virtual/${EXOTIC_TARGET_PREFIX}g++ ${EXOTIC_TARGET_PREFIX}newlib"
 
 PACKAGES = "\
     ${PN} \
@@ -14,13 +19,13 @@ PACKAGES = "\
 "
 
 FILES_${PN} = " \
-    ${prefix}/lib/${TARGET_SYS}/*.o \
+    ${prefix}/lib/${EXOTIC_TARGET_SYS}/*.o \
 " 
 FILES_${PN}-dev = "\
 "
-FILES_${PN}-dbg += "${prefix}/lib/${TARGET_SYS}/.debug/"
+FILES_${PN}-dbg += "${prefix}/lib/${EXOTIC_TARGET_SYS}/.debug/"
 FILES_${PN}-staticdev = "	\
-    ${prefix}/lib/${TARGET_SYS}/*.a \
+    ${prefix}/lib/${EXOTIC_TARGET_SYS}/*.a \
 	"
 
 # debugedit chokes on bare metal binaries
@@ -36,7 +41,9 @@ do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 INSANE_SKIP_${PN}-staticdev = "arch"
 INSANE_SKIP_${PN}-dbg += "arch"
 
+## Following causes a problem with the SDK creation!  HOST_OS is here fixed
+## so SDK build does not fully work
 ## look at package_rpm.bbclass -
 ## need to override pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-poky-linux-gnueabi')
 ## at the moment it looks like pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-e-os')
-HOST_OS="poky-linux-gnueabi"
+HOST_OS="${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"

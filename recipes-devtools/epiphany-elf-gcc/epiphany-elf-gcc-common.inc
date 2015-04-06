@@ -1,3 +1,9 @@
+##################################################################
+# Part two of this refactoring will move this file to
+# exotic-gcc-common.inc
+##################################################################
+
+
 SUMMARY = "GNU cc and gcc C compilers"
 HOMEPAGE = "http://www.gnu.org/software/gcc/"
 SECTION = "devel"
@@ -5,9 +11,9 @@ LICENSE = "GPL"
 
 NATIVEDEPS = ""
 
-inherit autotools gettext texinfo
+inherit autotools_exotic gettext texinfo
 
-BPN = "epiphany-elf-gcc"
+BPN = "${EXOTIC_TARGET_PREFIX}gcc"
 
 #python do_preconfigure () {
 #    import subprocess
@@ -25,16 +31,16 @@ BPN = "epiphany-elf-gcc"
 
 BINV = "${PV}"
 
-S = "${TMPDIR}/work-shared/epiphany-elf-gcc-${PV}-${PR}/git"
-B = "${WORKDIR}/epiphany-elf-gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
+S = "${TMPDIR}/work-shared/${EXOTIC_TARGET_PREFIX}gcc-${PV}-${PR}/git"
+B = "${WORKDIR}/${EXOTIC_TARGET_PREFIX}gcc-${PV}/build.${HOST_SYS}.${EXOTIC_TARGET_SYS}"
 
 # SS means Shared Stamps directory
-SS = "${TMPDIR}/stamps/work-shared/epiphany-elf-gcc-${PV}-${PR}"
+SS = "${TMPDIR}/stamps/work-shared/${EXOTIC_TARGET_PREFIX}gcc-${PV}-${PR}"
 do_fetch[stamp-base] = "${SS}"
 do_unpack[stamp-base] = "${SS}"
 do_patch[stamp-base] = "${SS}"
 do_preconfigure[stamp-base] = "${SS}"
-SSCLEAN = "${TMPDIR}/stamps/work-shared/epiphany-elf-gcc-[0-9]*-*"
+SSCLEAN = "${TMPDIR}/stamps/work-shared/${EXOTIC_TARGET_PREFIX}gcc-[0-9]*-*"
 do_fetch[stamp-base-clean] = "${SSCLEAN}"
 do_unpack[stamp-base-clean] = "${SSCLEAN}"
 do_unpack[umask] = "022"
@@ -42,20 +48,20 @@ do_patch[stamp-base-clean] = "${SSCLEAN}"
 do_preconfigure[stamp-base-clean] = "${SSCLEAN}"
 
 # SW means Shared Work directory
-SW = "${TMPDIR}/work-shared/epiphany-elf-gcc-${PV}-${PR}"
-SSTATE_SWSPEC = "sstate:epiphany-elf-gcc::${PV}:${PR}::${SSTATE_VERSION}:"
+SW = "${TMPDIR}/work-shared/${EXOTIC_TARGET_PREFIX}gcc-${PV}-${PR}"
+SSTATE_SWSPEC = "sstate:${EXOTIC_TARGET_PREFIX}gcc::${PV}:${PR}::${SSTATE_VERSION}:"
 WORKDIR_task-unpack = "${SW}"
 WORKDIR_task-patch = "${SW}"
 WORKDIR_task-preconfigure = "${SW}"
 
-oldincludedir="${exec_prefix}/${TARGET_SYS}/include"
-includedir="${exec_prefix}/${TARGET_SYS}/include"
+oldincludedir="${exec_prefix}/${EXOTIC_TARGET_SYS}/include"
+includedir="${exec_prefix}/${EXOTIC_TARGET_SYS}/include"
 # Update bitbake.conf setting - libdir="${exec_prefix}/${baselib}"
-libdir="${exec_prefix}/${baselib}/${TARGET_SYS}"
-#   following seems to be auto added gcc/${TARGET_SYS}/${BINV}
+libdir="${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}"
+#   following seems to be auto added gcc/${EXOTIC_TARGET_SYS}/${BINV}
 # Update bitbake.conf setting - libexecdir = "${libdir}/${BPN}"
-#   following seems to be auto added gcc/${TARGET_SYS}/${BINV}
-libexecdir="${exec_prefix}/${baselib}/${TARGET_SYS}"  
+#   following seems to be auto added gcc/${EXOTIC_TARGET_SYS}/${BINV}
+libexecdir="${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}"  
 gcclibdir = "${libdir}/gcc"
 
 target_includedir ?= "${includedir}"
@@ -63,14 +69,14 @@ target_libdir ?= "${libdir}"
 target_base_libdir ?= "${base_libdir}"
 target_prefix ?= "${prefix}"
 
-export CC_FOR_TARGET="${TARGET_PREFIX}gcc"
-export GCC_FOR_TARGET="${TARGET_PREFIX}gcc"
-export CXX_FOR_TARGET="${TARGET_PREFIX}g++"
-export AS_FOR_TARGET="${TARGET_PREFIX}as"
-export LD_FOR_TARGET="${TARGET_PREFIX}ld"
-export NM_FOR_TARGET="${TARGET_PREFIX}nm"
-export AR_FOR_TARGET="${TARGET_PREFIX}ar"
-export RANLIB_FOR_TARGET="${TARGET_PREFIX}ranlib"
+export CC_FOR_TARGET="${EXOTIC_TARGET_PREFIX}gcc"
+export GCC_FOR_TARGET="${EXOTIC_TARGET_PREFIX}gcc"
+export CXX_FOR_TARGET="${EXOTIC_TARGET_PREFIX}g++"
+export AS_FOR_TARGET="${EXOTIC_TARGET_PREFIX}as"
+export LD_FOR_TARGET="${EXOTIC_TARGET_PREFIX}ld"
+export NM_FOR_TARGET="${EXOTIC_TARGET_PREFIX}nm"
+export AR_FOR_TARGET="${EXOTIC_TARGET_PREFIX}ar"
+export RANLIB_FOR_TARGET="${EXOTIC_TARGET_PREFIX}ranlib"
 
 CLEANFUNCS += "workshared_clean"
 # The do_clean should be exclusive since share ${S}

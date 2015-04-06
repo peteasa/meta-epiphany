@@ -1,3 +1,8 @@
+##################################################################
+# Part two of this refactoring will move this file to
+# exotic-binutils.inc
+##################################################################
+
 SUMMARY = "GNU binary utilities for epiphany processor"
 DESCRIPTION = "The GNU Binutils are a collection of binary tools. \
 The main ones are ld (GNU Linker), and as (GNU Assembler). This \
@@ -13,27 +18,33 @@ BUGTRACKER = "https://github.com/adapteva/epiphany-binutils-gdb/issues"
 SECTION = "devel"
 LICENSE = "GPLv3"
 
-DEPENDS = "flex-native bison-native zlib-native gnu-config-native autoconf-native"
+DEPENDS = "autoconf-native"
 
-inherit autotools gettext multilib_header texinfo
+inherit autotools_exotic gettext multilib_header texinfo
 
 FILES_${PN} = " \
 	${bindir}/* \
-	${prefix}/${TARGET_SYS}/bin/* \
-    ${libdir}/${TARGET_SYS}/lib*-*.so \
-    ${prefix}/${TARGET_SYS}/lib/ldscripts/* \
+	${prefix}/${EXOTIC_TARGET_SYS}/bin/* \
+    ${libdir}/${EXOTIC_TARGET_SYS}/lib*-*.so \
+    ${prefix}/${EXOTIC_TARGET_SYS}/lib/ldscripts/* \
     "
 FILES_${PN}-dbg += " \
-    ${libdir}/${TARGET_SYS}/.debug/* \
+    ${libdir}/${EXOTIC_TARGET_SYS}/.debug/* \
     "
 FILES_${PN}-dev = "	\
-    ${libdir}/${TARGET_SYS}/libbfd.so \
-    ${libdir}/${TARGET_SYS}/libopcodes.so \
-    ${libdir}/${TARGET_SYS}/*.la \
+    ${libdir}/${EXOTIC_TARGET_SYS}/libbfd.so \
+    ${libdir}/${EXOTIC_TARGET_SYS}/libopcodes.so \
+    ${libdir}/${EXOTIC_TARGET_SYS}/*.la \
 	"
 FILES_${PN}-staticdev = "	\
-    ${libdir}/${TARGET_SYS}/*.a \
+    ${libdir}/${EXOTIC_TARGET_SYS}/*.a \
 	"
+
+# Skip the architecture qa check
+# this allows epiphany code to be packaged alongside arm code
+INSANE_SKIP_${PN} += "arch"
+INSANE_SKIP_${PN}-dbg += "arch"
+INSANE_SKIP_${PN}-dev += "arch"
 
 RPROVIDES_${PN} += "${PN}-symlinks"
 
@@ -61,18 +72,18 @@ USE_ALTERNATIVES_FOR = " \
 
 python do_package_prepend() {
     make_alts = d.getVar("USE_ALTERNATIVES_FOR", True) or ""
-    prefix = d.getVar("TARGET_PREFIX", True)
+    prefix = d.getVar("EXOTIC_TARGET_PREFIX", True)
     bindir = d.getVar("bindir", True)
     for alt in make_alts.split():
         d.setVarFlag('ALTERNATIVE_TARGET', alt, bindir + "/" + prefix + alt)
         d.setVarFlag('ALTERNATIVE_LINK_NAME', alt, bindir + "/" + alt)
 }
 
-# FILES_${PN}-dbg = "${prefix}/${TARGET_SYS}/bin/.debug ${prefix}/${libdir}/.debug"
+# FILES_${PN}-dbg = "${prefix}/${EXOTIC_TARGET_SYS}/bin/.debug ${prefix}/${libdir}/.debug"
 
-B = "${S}/build.${HOST_SYS}.${TARGET_SYS}"
+B = "${S}/build.${HOST_SYS}.${EXOTIC_TARGET_SYS}"
 
-EXTRA_OECONF = "--program-prefix=${TARGET_PREFIX} \
+EXTRA_OECONF = "--program-prefix=${EXOTIC_TARGET_PREFIX} \
                 --disable-werror \
                 --enable-plugins \
                 ${LDGOLD} \
@@ -93,11 +104,11 @@ export RANLIB = "${HOST_PREFIX}ranlib"
 export OBJCOPY = "${HOST_PREFIX}objcopy"
 export OBJDUMP = "${HOST_PREFIX}objdump"
 
-export AR_FOR_TARGET = "${TARGET_PREFIX}ar"
-export AS_FOR_TARGET = "${TARGET_PREFIX}as"
-export LD_FOR_TARGET = "${TARGET_PREFIX}ld"
-export NM_FOR_TARGET = "${TARGET_PREFIX}nm"
-export RANLIB_FOR_TARGET = "${TARGET_PREFIX}ranlib"
+export AR_FOR_TARGET = "${EXOTIC_TARGET_PREFIX}ar"
+export AS_FOR_TARGET = "${EXOTIC_TARGET_PREFIX}as"
+export LD_FOR_TARGET = "${EXOTIC_TARGET_PREFIX}ld"
+export NM_FOR_TARGET = "${EXOTIC_TARGET_PREFIX}nm"
+export RANLIB_FOR_TARGET = "${EXOTIC_TARGET_PREFIX}ranlib"
 
 export CC_FOR_HOST = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
 export CXX_FOR_HOST = "${CCACHE}${HOST_PREFIX}gcc ${HOST_CC_ARCH}"
@@ -121,12 +132,12 @@ do_configure () {
 do_install () {
 	autotools_do_install
 
-	# Fix the /usr/${TARGET_SYS}/bin/* links
-	for l in ${D}${prefix}/${TARGET_SYS}/bin/*; do
+	# Fix the /usr/${EXOTIC_TARGET_SYS}/bin/* links
+	for l in ${D}${prefix}/${EXOTIC_TARGET_SYS}/bin/*; do
 		rm -f $l
-		ln -sf `echo ${prefix}/${TARGET_SYS}/bin \
+		ln -sf `echo ${prefix}/${EXOTIC_TARGET_SYS}/bin \
 			| tr -s / \
-			| sed -e 's,^/,,' -e 's,[^/]*,..,g'`${bindir}/${TARGET_PREFIX}`basename $l` $l
+			| sed -e 's,^/,,' -e 's,[^/]*,..,g'`${bindir}/${EXOTIC_TARGET_PREFIX}`basename $l` $l
 	done
 
 	cd ${D}${bindir}
