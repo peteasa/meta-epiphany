@@ -81,6 +81,7 @@ SRC_URI += " \
     file://0048-PR58854_fix_arm_apcs_epilogue.patch \
     file://0049-Enable-SPE-AltiVec-generation-on-powepc-linux-target.patch \
     file://0052-PR-rtl-optimization-61801.patch \
+    file://target-gcc-includedir.patch \
     "
 
 #    file://0050-PR-target-58595.patch \

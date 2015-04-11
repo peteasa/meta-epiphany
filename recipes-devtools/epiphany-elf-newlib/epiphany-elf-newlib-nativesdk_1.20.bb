@@ -95,8 +95,8 @@ HOST_EXEEXT = ""
 # For example override STAGING_BINDIR_TOOLCHAIN to match original TARGET
 #
 # STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_ARCH_GVARIABLE}${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"
-MULTIMACH_TARGET_SYS = "${PACKAGE_ARCH}${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"
-MULTIMACH_HOST_SYS = "${PACKAGE_ARCH}${HOST_VENDOR_GVARIABLE}-${HOST_OS_GVARIABLE}"
+MULTIMACH_TARGET_SYS = "${PACKAGE_ARCH}${HOST_VENDOR}-${HOST_OS}"
+MULTIMACH_HOST_SYS = "${PACKAGE_ARCH}${HOST_VENDOR}-${HOST_OS}"
 
 # Move the Staging bin dir to a better location
 STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGET_SYS}"
@@ -109,13 +109,15 @@ require epiphany-elf-newlib.inc
 
 inherit nativesdk
 
-DEPENDS = ""
-
-do_configure() {
+## without empty do_configure and do_compile the DEPENDS condition has no effect!
+## if newlib is installed then epiphany-elf-gcc-cross-canadian-epiphany does not compile
+## unsure why not.
+do_configure () {
 }
-
 do_compile () {
 }
+
+DEPENDS = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH}"
 
 do_install () {
 	   # whilst not fool proof this is the best that can be done for now

@@ -3,6 +3,7 @@
 # exotic-gcc-target.inc
 ##################################################################
 
+GCCMULTILIB = "--enable-multilib"
 require epiphany-elf-gcc-configure-common.inc
 
 DEPENDS =+ "virtual/${EXOTIC_TARGET_SYS}-gcc ${EXOTIC_TARGET_SYS}-newlib ${EXOTIC_TARGET_SYS}-libgcc"

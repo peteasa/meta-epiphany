@@ -8,13 +8,33 @@ inherit cross-canadian-exotic
 SUMMARY = "GNU cc and gcc C compilers (cross-canadian for ${EXOTIC_TARGET_ARCH} target)"
 PN = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
-DEPENDS = "virtual/${EXOTIC_TARGET_PREFIX}gcc virtual/${HOST_PREFIX}binutils-crosssdk virtual/nativesdk-${HOST_PREFIX}libc-for-gcc nativesdk-gettext ${EXOTIC_TARGET_PREFIX}binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} nativesdk-${EXOTIC_TARGET_PREFIX}newlib nativesdk-${EXOTIC_TARGET_PREFIX}libgcc nativesdk-${EXOTIC_TARGET_PREFIX}libgloss virtual/nativesdk-${EXOTIC_TARGET_PREFIX}compilerlibs "
+# 
+DEPENDS = "virtual/${EXOTIC_TARGET_PREFIX}gcc virtual/${HOST_PREFIX}binutils-crosssdk virtual/nativesdk-${HOST_PREFIX}libc-for-gcc nativesdk-gettext"
+
+GCCMULTILIB = "--enable-multilib"
 
 require epiphany-elf-gcc-configure-common.inc
 
 # Ensure that the original ${TARGET_SYS} is used to calculate the sysroot 
 # allowing us to share the same sysroot.
 # TODO fix up the correct path for the c++ include dir... 
+EXTRA_OECONF = "\
+    ${GCCMULTILIB} \
+    --disable-gdbtk \
+    --disable-werror \
+    --enable-fast-install=N/A \
+    --without-included-gettext \
+    --enable-languages=c,c++ \
+    --enable-linker-build-id \
+    --disable-libmudflap \
+    --disable-libitm \
+    --enable-plugin \
+    --with-newlib \
+    --program-prefix=${EXOTIC_TARGET_PREFIX} \
+    ${EXTRA_OECONF_PATHS} \
+    --with-cross-host=${HOST_SYS}-${HOST_VENDOR}-${HOST_OS} \
+"
+
 EXTRA_OECONF_PATHS = "\
     --with-gxx-include-dir=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}${target_includedir}/c++/${BINV} \
     --with-build-time-tools=${STAGING_DIR_NATIVE}${prefix_native}/${EXOTIC_TARGET_SYS}/bin \
@@ -76,7 +96,6 @@ do_configure () {
 	export CPPFLAGS_FOR_TARGET="${EXOTIC_TARGET_CPPFLAGS}"
 	export CXXFLAGS_FOR_TARGET="${EXOTIC_TARGET_CXXFLAGS}"
 	export LDFLAGS_FOR_TARGET="${EXOTIC_TARGET_LDFLAGS}"
-	(cd ${S} && gnu-configize) || die "failure running gnu-configize"
 	oe_runconf
 }
 
@@ -181,21 +200,6 @@ SYSTEMHEADERS = "/usr/include"
 SYSTEMLIBS = "${target_base_libdir}/"
 SYSTEMLIBS1 = "${target_libdir}/"
 
-EXTRA_OECONF = "\
-    --enable-multilib \
-    --disable-gdbtk \
-    --disable-werror \
-    --enable-fast-install=N/A \
-    --without-included-gettext \
-    --enable-languages=c,c++ \
-    --enable-linker-build-id \
-    --disable-libmudflap \
-    --disable-libitm \
-    --enable-plugin \
-    --with-newlib \
-    --program-prefix=${EXOTIC_TARGET_PREFIX} \
-    ${EXTRA_OECONF_PATHS} \
-"
 
 EXTRA_OECONF += "--enable-poison-system-directories"
 

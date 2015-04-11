@@ -59,7 +59,7 @@ do_install () {
 INHIBIT_DEFAULT_DEPS = "1"
 
 DEPENDS = "virtual/${EXOTIC_TARGET_PREFIX}gcc virtual/${EXOTIC_TARGET_PREFIX}g++ ${EXOTIC_TARGET_PREFIX}libgcc ${EXOTIC_TARGET_PREFIX}newlib"
-PROVIDES = "virtual/${EXOTIC_TARGET_PREFIX}compilerlibs"
+PROVIDES = "virtual/${EXOTIC_TARGET_PREFIX}compilerlibs ${EXOTIC_TARGET_PREFIX}gcc-runtime"
 
 # Can we use the parallella-hdmi sysroot version for the sdk?  Uncomment if we need sdk version
 # BBCLASSEXTEND = "nativesdk"

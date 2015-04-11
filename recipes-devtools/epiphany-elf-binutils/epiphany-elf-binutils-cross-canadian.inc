@@ -9,7 +9,25 @@ SUMMARY = "GNU binary utilities (cross-canadian for ${EXOTIC_TARGET_ARCH} target
 PN = "${EXOTIC_TARGET_PREFIX}binutils-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 BPN = "${EXOTIC_TARGET_PREFIX}binutils"
 
-DEPENDS = "flex-native bison-native virtual/${HOST_PREFIX}gcc-crosssdk virtual/nativesdk-libc nativesdk-zlib nativesdk-gettext nativesdk-flex"
+DEPENDS = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH} nativesdk-${EXOTIC_TARGET_PREFIX}newlib nativesdk-${EXOTIC_TARGET_PREFIX}libgcc nativesdk-${EXOTIC_TARGET_PREFIX}libgloss nativesdk-${EXOTIC_TARGET_PREFIX}gcc-runtime flex-native bison-native virtual/${HOST_PREFIX}gcc-crosssdk virtual/nativesdk-libc nativesdk-zlib nativesdk-gettext nativesdk-flex"
+
+RDEPENDS_${PN} = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH} \
+       nativesdk-${EXOTIC_TARGET_PREFIX}gcc-runtime-dbg \
+       nativesdk-${EXOTIC_TARGET_PREFIX}gcc-runtime-libstdc++-dev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}gcc-runtime-libstdc++-staticdev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgcc \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgcc-dev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgcc-libgcov \
+       nativesdk-${EXOTIC_TARGET_PREFIX}newlib \
+       nativesdk-${EXOTIC_TARGET_PREFIX}newlib-staticdev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}newlib-dev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}newlib-dbg \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss-staticdev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss-dev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss-dbg \ 
+       "
+
 EXTRA_OECONF += "--with-sysroot=${SDKPATH}/sysroots/${TUNE_PKGARCH}${EXOTIC_TARGET_VENDOR}-${EXOTIC_TARGET_OS} \
                 "
 

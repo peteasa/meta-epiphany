@@ -96,8 +96,8 @@ HOST_EXEEXT = ""
 # For example override STAGING_BINDIR_TOOLCHAIN to match original TARGET
 #
 # STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_ARCH_GVARIABLE}${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"
-MULTIMACH_TARGET_SYS = "${PACKAGE_ARCH}${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"
-MULTIMACH_HOST_SYS = "${PACKAGE_ARCH}${HOST_VENDOR_GVARIABLE}-${HOST_OS_GVARIABLE}"
+MULTIMACH_TARGET_SYS = "${PACKAGE_ARCH}${HOST_VENDOR}-${HOST_OS}"
+MULTIMACH_HOST_SYS = "${PACKAGE_ARCH}${HOST_VENDOR}-${HOST_OS}"
 
 # Move the Staging bin dir to a better location
 STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGET_SYS}"
@@ -110,13 +110,10 @@ require epiphany-elf-libgloss.inc
 
 inherit nativesdk
 
-DEPENDS = ""
+deltask do_configure
+deltask do_compile
 
-do_configure() {
-}
-
-do_compile () {
-}
+DEPENDS = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH}"
 
 do_install () {
 	   # whilst not fool proof this is the best that can be done for now
