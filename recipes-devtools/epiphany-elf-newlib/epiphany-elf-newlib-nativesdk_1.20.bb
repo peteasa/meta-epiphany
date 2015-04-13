@@ -108,9 +108,9 @@ require epiphany-elf-newlib-${PV}.inc
 require epiphany-elf-newlib.inc
 
 ## move the libraries to where the compiler looks for them
-FILES_${PN}-dbg += "${prefix}/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/.debug/"
+FILES_${PN}-dbg += "${prefix}/${EXOTIC_TARGET_SYS}/lib/.debug/"
 FILES_${PN}-staticdev = "	\
-    ${prefix}/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/* \
+    ${prefix}/${EXOTIC_TARGET_SYS}/lib/* \
 	"
 
 inherit nativesdk
@@ -134,8 +134,8 @@ do_install () {
 	   cp -r ${STAGING_DIR}/${MACHINE}/usr/${EXOTIC_TARGET_SYS}/include/rpc  ${D}${exec_prefix}/${EXOTIC_TARGET_SYS}/include
 	   cp -r ${STAGING_DIR}/${MACHINE}/usr/${EXOTIC_TARGET_SYS}/include/sys  ${D}${exec_prefix}/${EXOTIC_TARGET_SYS}/include
 
-	   mkdir -p ${D}${exec_prefix}/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
-	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/libc.a ${D}${exec_prefix}/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
-	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/libg.a ${D}${exec_prefix}/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
-	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/libm.a ${D}${exec_prefix}/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
+	   mkdir -p ${D}${exec_prefix}/${EXOTIC_TARGET_SYS}/lib/
+	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/libc.a ${D}${exec_prefix}/${EXOTIC_TARGET_SYS}/lib/
+	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/libg.a ${D}${exec_prefix}/${EXOTIC_TARGET_SYS}/lib/
+	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/libm.a ${D}${exec_prefix}/${EXOTIC_TARGET_SYS}/lib/
 }
