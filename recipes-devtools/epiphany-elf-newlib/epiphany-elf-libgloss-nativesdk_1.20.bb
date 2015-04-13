@@ -108,6 +108,14 @@ STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGE
 require epiphany-elf-newlib-${PV}.inc
 require epiphany-elf-libgloss.inc
 
+FILES_${PN} = " \
+    ${prefix}/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/*.o \
+" 
+FILES_${PN}-dbg += "${prefix}/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/.debug/"
+FILES_${PN}-staticdev = "	\
+    ${prefix}/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/*.a \
+	"
+
 inherit nativesdk
 
 deltask do_configure
@@ -117,9 +125,9 @@ DEPENDS = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH}"
 
 do_install () {
 	   # whilst not fool proof this is the best that can be done for now
-	   mkdir -p ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}
-	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/cacheman* ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}
-	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/crt0.o ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}
-	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/libepiphany.a ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}
-	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/libnosys.a ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}
+	   mkdir -p ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
+	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/cacheman* ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
+	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/crt0.o ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
+	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/libepiphany.a ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
+	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/libnosys.a ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
 }
