@@ -119,7 +119,8 @@ do_install () {
 	cp ${B}/src/e-hal/src/epiphany-hal-api.h ${D}/${prefix}/include/
 	cp ${B}/src/e-hal/src/epiphany-hal.h ${D}/${prefix}/include/
 
-	ln -sf ${D}/${prefix}/include/epiphany-hal.h ${D}/${prefix}/include/e-hal.h
+	cd ${D}/${prefix}/include/
+	ln -sf epiphany-hal.h e-hal.h
 
 	cp ${B}/src/e-hal/src/epiphany-hal-data.h ${D}/${prefix}/include/
 	cp ${B}/src/e-hal/src/epiphany-hal-data-local.h ${D}/${prefix}/include/
@@ -127,7 +128,8 @@ do_install () {
 
 	cp ${B}/src/e-lib/include/e_lib.h ${D}/${prefix}/epiphany-elf/include/
 
-	ln -sf ${D}/${prefix}/epiphany-elf/include/e_lib.h ${D}/${prefix}/epiphany-elf/include/e-lib.h
+	cd ${D}/${prefix}/epiphany-elf/include/
+	ln -sf e_lib.h e-lib.h
 
 	cp ${B}/src/e-lib/include/e_common.h ${D}/${prefix}/epiphany-elf/include/
 	cp ${B}/src/e-lib/include/e_types.h ${D}/${prefix}/epiphany-elf/include/
@@ -143,7 +145,8 @@ do_install () {
 
 	cp ${B}/src/e-loader/src/e-loader.h ${D}/${prefix}/include/
 
-	ln -sf ${D}/${prefix}/include/e-loader.h ${D}/${prefix}/include/e_loader.h
+	cd ${D}/${prefix}/include/
+	ln -sf e-loader.h e_loader.h
 
 	cp ${B}/src/e-xml/Release/libe-xml.so ${D}/${prefix}/lib/
 
@@ -153,7 +156,8 @@ do_install () {
 
 	cp ${B}/src/e-lib/Release/libe-lib.a ${D}/${prefix}/lib/epiphany-elf/
 
-	ln -sf ${D}/${prefix}/lib/epiphany-elf/libe-lib.a ${D}/${prefix}/lib/epiphany-elf/libelib.a
+	cd ${D}/${prefix}/lib/epiphany-elf/
+	ln -sf libe-lib.a libelib.a
 
 	cp  ${B}/src/e-utils/e-objcopy ${D}/${prefix}/bin/
 	cp  ${B}/src/e-utils/e-hw-rev/e-hw-rev.sh ${D}/${prefix}/bin/e-hw-rev
@@ -179,5 +183,6 @@ do_install () {
 	cp  ${B}/src/e-hal/Release/libe-hal.so ${EPIPHANY_HOME}/bsps/zed_E16G3_512mb 
 	cp  ${B}/src/e-hal/Release/libe-hal.so ${EPIPHANY_HOME}/bsps/zed_E64G4_512mb
 
-	ln -sf ${EPIPHANY_HOME}/bsps/parallella_E16G3_1GB ${EPIPHANY_HOME}/bsps/current
+	cd ${EPIPHANY_HOME}/bsps/
+	ln -sf parallella_E16G3_1GB current
 }
