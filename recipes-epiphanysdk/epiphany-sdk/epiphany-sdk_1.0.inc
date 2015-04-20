@@ -111,8 +111,8 @@ do_install_append () {
 
 	cd ${EPIPHANY_HOME}/tools/host
 
-	ln -sf ../../../lib ./
-	ln -sf ../../../bin ./
+	ln -sf ../../../../lib ./
+	ln -sf ../../../../bin ./
 
 	cd ${EPIPHANY_HOME}/tools/e-gnu/epiphany-elf
 
@@ -122,9 +122,11 @@ do_install_append () {
 	ln -sf ../../../../../epiphany-elf/lib ./
 
 	cd ${EPIPHANY_HOME}/tools/e-gnu
-	ln -sf ../../../bin ./
+	ln -sf ../../../../bin ./
 	mkdir -p ${D}${prefix}/lib/epiphany-elf/gcc
-	ln -sf ../../../../usr/lib/epiphany-elf/gcc ./lib
-	ln -sf ../../../../usr/lib/epiphany-elf/gcc ./libexec
+	cd ${EPIPHANY_HOME}/tools/e-gnu/lib
+	ln -sf ../../../../../lib/epiphany-elf/gcc ./
+	cd ${EPIPHANY_HOME}/tools/e-gnu/libexec
+	ln -sf ../../../../../lib/epiphany-elf/gcc ./
 	rmdir ${D}${prefix}/lib/epiphany-elf/gcc
 }
