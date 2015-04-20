@@ -103,7 +103,7 @@ do_install () {
 	cat <<EOF > arm-linux-gnueabihf-gcc
 #!/bin/sh
 
-\${OECORE_NATIVE_SYSROOT}/usr/bin/arm-poky-linux-gnueabi/arm-poky-linux-gnueabi-gcc -march=armv7-a -mthumb-interwork -mfloat-abi=hard -mfpu=neon --sysroot=\${OECORE_TARGET_SYSROOT}/sysroots/${TUNE_PKGARCH}-poky-linux-gnueabi "\$@"
+\${OECORE_NATIVE_SYSROOT}/usr/bin/arm-poky-linux-gnueabi/arm-poky-linux-gnueabi-gcc -march=armv7-a -mthumb-interwork -mfloat-abi=hard -mfpu=neon --sysroot=\${OECORE_TARGET_SYSROOT} "\$@"
 
 EOF
 
@@ -112,7 +112,7 @@ EOF
 	cat <<EOF > gcc
 #!/bin/sh
 
-\${OECORE_NATIVE_SYSROOT}/usr/bin/arm-poky-linux-gnueabi/arm-poky-linux-gnueabi-gcc -march=armv7-a -mthumb-interwork -mfloat-abi=hard -mfpu=neon --sysroot=\${OECORE_TARGET_SYSROOT}/sysroots/${TUNE_PKGARCH}-poky-linux-gnueabi "\$@"
+\${OECORE_NATIVE_SYSROOT}/usr/bin/arm-poky-linux-gnueabi/arm-poky-linux-gnueabi-gcc -march=armv7-a -mthumb-interwork -mfloat-abi=hard -mfpu=neon --sysroot=\${OECORE_TARGET_SYSROOT} "\$@"
 
 EOF
 
