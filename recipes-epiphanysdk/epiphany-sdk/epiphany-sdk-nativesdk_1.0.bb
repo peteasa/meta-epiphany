@@ -107,12 +107,11 @@ do_install () {
 
 EOF
 
-	chmod +x arm-linux-gnueabihf-g++
+	chmod +x arm-linux-gnueabihf-gcc
 
 	##
 	## Attempt to create a version of g++ that calls the correct cross compiler
 	##
-	cd ${D}/${prefix}/bin
 	cat <<EOF > arm-linux-gnueabihf-g++
 #!/bin/sh
 
