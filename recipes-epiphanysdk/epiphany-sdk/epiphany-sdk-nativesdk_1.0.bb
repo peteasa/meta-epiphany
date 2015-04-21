@@ -107,7 +107,20 @@ do_install () {
 
 EOF
 
-	chmod +x arm-linux-gnueabihf-gcc
+	chmod +x arm-linux-gnueabihf-g++
+
+	##
+	## Attempt to create a version of g++ that calls the correct cross compiler
+	##
+	cd ${D}/${prefix}/bin
+	cat <<EOF > arm-linux-gnueabihf-g++
+#!/bin/sh
+
+\${OECORE_NATIVE_SYSROOT}/usr/bin/arm-poky-linux-gnueabi/arm-poky-linux-gnueabi-g++ -march=armv7-a -mthumb-interwork -mfloat-abi=hard -mfpu=neon --sysroot=\${OECORE_TARGET_SYSROOT} "\$@"
+
+EOF
+
+	chmod +x arm-linux-gnueabihf-g++
 
 	cat <<EOF > gcc
 #!/bin/sh
@@ -117,6 +130,15 @@ EOF
 EOF
 
 	chmod +x gcc
+
+	cat <<EOF > g++
+#!/bin/sh
+
+\${OECORE_NATIVE_SYSROOT}/usr/bin/arm-poky-linux-gnueabi/arm-poky-linux-gnueabi-g++ -march=armv7-a -mthumb-interwork -mfloat-abi=hard -mfpu=neon --sysroot=\${OECORE_TARGET_SYSROOT} "\$@"
+
+EOF
+
+	chmod +x g++
 
 	cp ${STAGING_DIR}/${MACHINE}/usr/lib/libe-xml.so ${D}/${prefix}/lib/
 	cp ${STAGING_DIR}/${MACHINE}/usr/lib/libe-loader.so ${D}/${prefix}/lib/
