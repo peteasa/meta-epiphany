@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "\
 ## In this recipe we build from source, meta-parallella downloads zip.
 PN = "epiphany-sdk"
 
-DEPENDS =+ "epiphany-elf-newlib epiphany-elf-libgcc"
+DEPENDS =+ "epiphany-elf-newlib epiphany-elf-libgcc virtual/kernel"
 
 ## Define the source directory to help locate the LICENSE file
 S = "${WORKDIR}/git"
