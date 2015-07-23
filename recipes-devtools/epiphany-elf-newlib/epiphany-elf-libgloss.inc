@@ -45,5 +45,5 @@ INSANE_SKIP_${PN}-dbg += "arch"
 ## so SDK build does not fully work
 ## look at package_rpm.bbclass -
 ## need to override pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-poky-linux-gnueabi')
-## at the moment it looks like pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-e-os')
+## at the moment it looks like pkgarch = d.expand('${PACKAGE_ARCH_EXTEND}-elf')
 HOST_OS="${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"

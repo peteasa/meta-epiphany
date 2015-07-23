@@ -48,41 +48,41 @@ do_install () {
 
 	cp ${STAGING_DIR}/${MACHINE}/usr/include/epiphany-hal-data.h ${D}/${prefix}/include/
 	cp ${STAGING_DIR}/${MACHINE}/usr/include/epiphany-hal-data-local.h ${D}/${prefix}/include/
-	# cp ${STAGING_DIR}/${MACHINE}/usr/include/epiphany-shm-manager.h ${D}/${prefix}/include/
-
+	cp ${STAGING_DIR}/${MACHINE}/usr/include/epiphany-shm-manager.h ${D}/${prefix}/include/
+	cp ${STAGING_DIR}/${MACHINE}/usr/include/a_trace.h ${D}/${prefix}/include/
+	cp ${STAGING_DIR}/${MACHINE}/usr/include/a_trace_shared.h ${D}/${prefix}/include/
 	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_lib.h ${D}/${prefix}/epiphany-elf/include/
 
 	cd ${D}/${prefix}/epiphany-elf/include/
 	ln -sf e_lib.h e-lib.h
 
 	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_common.h ${D}/${prefix}/epiphany-elf/include/
-	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_types.h ${D}/${prefix}/epiphany-elf/include/
-	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_regs.h ${D}/${prefix}/epiphany-elf/include/
-	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_dma.h ${D}/${prefix}/epiphany-elf/include/
+	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_coreid.h ${D}/${prefix}/epiphany-elf/include/
 	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_ctimers.h ${D}/${prefix}/epiphany-elf/include/
+	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_dma.h ${D}/${prefix}/epiphany-elf/include/	
 	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_ic.h ${D}/${prefix}/epiphany-elf/include/
 	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_mem.h ${D}/${prefix}/epiphany-elf/include/
 	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_mutex.h ${D}/${prefix}/epiphany-elf/include/
-	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_coreid.h ${D}/${prefix}/epiphany-elf/include/
-	# cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_trace.h ${D}/${prefix}/epiphany-elf/include/
-	# cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_shm.h ${D}/${prefix}/epiphany-elf/include/
+	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_regs.h ${D}/${prefix}/epiphany-elf/include/
+	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_shm.h ${D}/${prefix}/epiphany-elf/include/
+	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_trace.h ${D}/${prefix}/epiphany-elf/include/
+	cp ${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include/e_types.h ${D}/${prefix}/epiphany-elf/include/
 
 	cp ${STAGING_DIR}/${MACHINE}/usr/include/e-loader.h ${D}/${prefix}/include/
 
 	cd ${D}/${prefix}/include/
 	ln -sf e-loader.h e_loader.h
-
-	cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-objcopy ${D}/${prefix}/bin/
+	
+	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-clear-shmtable ${D}/${prefix}/bin/
+	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-eclipse ${D}/${prefix}/bin/
 	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-hw-rev ${D}/${prefix}/bin/
-	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-hw-rev.e ${D}/${prefix}/bin/
 	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-loader ${D}/${prefix}/bin/
-	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-loader.e ${D}/${prefix}/bin/
+	cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-objcopy ${D}/${prefix}/bin/
 	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-read ${D}/${prefix}/bin/
-	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-read.e ${D}/${prefix}/bin/
 	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-reset ${D}/${prefix}/bin/
-	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-reset.e ${D}/${prefix}/bin/
+	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-trace-dump ${D}/${prefix}/bin/
+	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-trace-server ${D}/${prefix}/bin/
 	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-write ${D}/${prefix}/bin/
-	#cp  ${STAGING_DIR}/${MACHINE}/usr/bin/e-write.e ${D}/${prefix}/bin/
 
 	## SDK seems to want additional links for various files so provide these here
 	cp  /dev/null ${D}/${prefix}/bin/epiphany-elf/epiphany-elf-ar
@@ -139,14 +139,17 @@ EOF
 
 	chmod +x g++
 
-	cp ${STAGING_DIR}/${MACHINE}/usr/lib/libe-xml.so ${D}/${prefix}/lib/
-	cp ${STAGING_DIR}/${MACHINE}/usr/lib/libe-loader.so ${D}/${prefix}/lib/
 	cp ${STAGING_DIR}/${MACHINE}/usr/lib/libe-hal.so ${D}/${prefix}/lib/
+	cp ${STAGING_DIR}/${MACHINE}/usr/lib/libe-loader.so ${D}/${prefix}/lib/
+	cp ${STAGING_DIR}/${MACHINE}/usr/lib/libe-trace.so ${D}/${prefix}/lib/
+	cp ${STAGING_DIR}/${MACHINE}/usr/lib/libe-xml.so ${D}/${prefix}/lib/
 
 	cp ${STAGING_DIR}/${MACHINE}/usr/lib/epiphany-elf/libe-lib.a ${D}/${prefix}/epiphany-elf/lib
 
 	cd ${D}/${prefix}/epiphany-elf/lib
 	ln -sf libe-lib.a libelib.a
+	
+	cp ${STAGING_DIR}/${MACHINE}/usr/lib/epiphany-elf/libmemman.a ${D}/${prefix}/epiphany-elf/lib
 
 	## cp -r ${STAGING_DIR}/${MACHINE}/usr/epiphany/epiphany-sdk/bsps/p64v1521 ${EPIPHANY_HOME}/bsps
 	## cp -r ${STAGING_DIR}/${MACHINE}/usr/epiphany/epiphany-sdk/bsps/parallella64 ${EPIPHANY_HOME}/bsps
@@ -156,5 +159,4 @@ EOF
 
 	cd ${EPIPHANY_HOME}/bsps/
 	ln -sf parallella_E16G3_1GB current
-
 }

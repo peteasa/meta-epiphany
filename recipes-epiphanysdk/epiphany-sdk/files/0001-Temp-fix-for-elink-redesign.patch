@@ -1,0 +1,45 @@
+From 81900ca3ad2b316130f3517b43fd3255aa3d8109 Mon Sep 17 00:00:00 2001
+From: Peter Saunderson <peteasa@gmail.com>
+Date: Sun, 19 Jul 2015 09:35:15 +0100
+Subject: [PATCH 1/1] Temp fix for elink-redesign
+
+---
+ src/e-utils/e-hw-rev/e-hw-rev.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/src/e-utils/e-hw-rev/e-hw-rev.c b/src/e-utils/e-hw-rev/e-hw-rev.c
+index 4af054e..2796988 100644
+--- a/src/e-utils/e-hw-rev/e-hw-rev.c
++++ b/src/e-utils/e-hw-rev/e-hw-rev.c
+@@ -70,12 +70,14 @@ static char *type_strings_P1A[] = {
+ 
+ #define TYPE_MAX_P1A (countof(type_strings_P1A)-1)
+ 
+-void print_platform_info(e_syscfg_version_t *version)
++void print_platform_info(e_sys_version_t *version)
+ {
+-	unsigned int revision = version->fields.revision;
+-	unsigned int type = version->fields.type;
+-	unsigned int platform = version->fields.platform;
+-	unsigned int generation = version->fields.generation;
++	unsigned int revision = version->revision;
++	//unsigned int type = version->fields.type;
++	unsigned int type = 0;
++	unsigned int platform = version->platform;
++	//unsigned int generation = version->fields.generation;
++	unsigned int generation = 1;
+ 	char *gen_str, *plat_str, *type_str;
+ 
+ 	printf("Epiphany Hardware Version: %02x.%02x.%02x.%02x\n\n",
+@@ -124,7 +126,7 @@ void print_platform_info(e_syscfg_version_t *version)
+ 
+ int main()
+ {
+-	e_syscfg_version_t version;
++	e_sys_version_t version;
+ 
+ 	if (E_OK != e_init(NULL)) {
+ 		fprintf(stderr, "Epiphany HAL initialization failed\n");
+-- 
+2.1.4
+

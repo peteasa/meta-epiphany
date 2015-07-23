@@ -1,7 +1,6 @@
 ##################################################################
 #
-# This recipe is for version esdk.5.13.09.10
-# The recipe for version 2015.? will be very similar
+# This recipe is for version version 2015.1
 #
 ##################################################################
 
@@ -22,16 +21,22 @@ DEPENDS =+ "epiphany-elf-newlib epiphany-elf-libgcc"
 ## Define the source directory to help locate the LICENSE file
 S = "${WORKDIR}/git"
 
-SRC_URI = " git://github.com/adapteva/epiphany-libs.git;"
+SRC_URI = " git://github.com/adapteva/epiphany-libs.git;branch=${SBRANCH}"
 
 ## Add the patch file
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/files:"
 SRC_URI += " \
-    file://epiphany-libs-esdk.5.13.09.10.patch \
+    file://epiphany-libs.patch \
 "
 
+#     file://0001-Temp-fix-for-elink-redesign.patch
+
 # Tag esdk.5.13.09.10
-SRCREV = "544f387c2f7be4de83399daeb86d0f3e35ecdf45"
+# SRCREV = "544f387c2f7be4de83399daeb86d0f3e35ecdf45"
+# elink-redesign 2015-07-03
+SBRANCH = "elink-redesign"
+SRCREV = "be28d22caf3e09aa5813ec3a946279af2ee5191c"
+# SRCREV = "f0343ae49e10f774f86ba9918617dc7c31acfb22"
 
 ## Setup cross compiler for e-lib perhaps override things from nativesdk.bbclass
 export EPIPHANY_CROSS_COMPILE="${STAGING_DIR_NATIVE}/usr/bin/epiphany-elf/epiphany-elf-"
@@ -66,13 +71,17 @@ FILES_${PN} = " \
     ${prefix}/epiphany/epiphany-sdk/bsps/zed_E64G4_512mb/*.hdf \
     ${prefix}/epiphany/epiphany-sdk/bsps/zed_E64G4_512mb/*.xml \
     ${prefix}/epiphany/epiphany-sdk/tools \
+    ${prefix}/include/epiphany-hal.h \
     ${prefix}/include/epiphany-hal-api.h \
     ${prefix}/include/epiphany-hal-data.h \
     ${prefix}/include/epiphany-hal-data-local.h \
-    ${prefix}/include/e-loader.h \
-    ${prefix}/include/epiphany-hal.h \
+    ${prefix}/include/epiphany-shm-manager.h \
+    ${prefix}/include/a_trace.h \
+    ${prefix}/include/a_trace_shared.h \
     ${prefix}/include/e-hal.h \
+    ${prefix}/include/e-loader.h \
     ${prefix}/include/e_loader.h \
+    ${prefix}/include/memman.h \
     ${prefix}/epiphany-elf/include/e_common.h \
     ${prefix}/epiphany-elf/include/e_coreid.h \
     ${prefix}/epiphany-elf/include/e_ctimers.h \
@@ -83,6 +92,8 @@ FILES_${PN} = " \
     ${prefix}/epiphany-elf/include/e_mem.h \
     ${prefix}/epiphany-elf/include/e_mutex.h \
     ${prefix}/epiphany-elf/include/e_regs.h \
+    ${prefix}/epiphany-elf/include/e_shm.h \
+    ${prefix}/epiphany-elf/include/e_trace.h \
     ${prefix}/epiphany-elf/include/e_types.h \
     ${prefix}/lib/*.so \
 "
