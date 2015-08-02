@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "\
 ## In this recipe we build from source, meta-parallella downloads zip.
 PN = "epiphany-sdk"
 
-DEPENDS =+ "epiphany-elf-newlib epiphany-elf-libgcc virtual/kernel"
+DEPENDS =+ "epiphany-elf-newlib epiphany-elf-libgcc virtual/kernel kernel-devsrc"
 
 ## Define the source directory to help locate the LICENSE file
 S = "${WORKDIR}/git"
@@ -40,7 +40,7 @@ SRCREV = "be28d22caf3e09aa5813ec3a946279af2ee5191c"
 
 ## Setup cross compiler for e-lib perhaps override things from nativesdk.bbclass
 export EPIPHANY_CROSS_COMPILE="${STAGING_DIR_NATIVE}/usr/bin/epiphany-elf/epiphany-elf-"
-export PARALLELLA_LINUX_HOME="${STAGING_DIR}/${MACHINE}/usr/src/kernel"
+export PARALLELLA_LINUX_HOME="${STAGING_KERNEL_DIR}"
 export EPIPHANY_ELF_INCLUDE="${STAGING_DIR}/${MACHINE}/usr/epiphany-elf/include"
 EPIPHANY_HOME="${D}${prefix}/epiphany/epiphany-sdk"
 
