@@ -31,13 +31,8 @@ SRC_URI += " \
 
 #     file://0001-Temp-fix-for-elink-redesign.patch
 
-# Tag esdk.5.13.09.10
-# SRCREV = "544f387c2f7be4de83399daeb86d0f3e35ecdf45"
-# elink-redesign 2015-07-03
+# elink-redesign 2015-11-18
 SBRANCH = "elink-redesign"
-# SRCREV = "be28d22caf3e09aa5813ec3a946279af2ee5191c"
-# elink-redesign 2015-07-03 after register changes
-# SRCREV = "f0343ae49e10f774f86ba9918617dc7c31acfb22"
 SRCREV = "bc94590302ce96e626c1f45e13746aa3b2b54946"
 
 ## Setup cross compiler for e-lib perhaps override things from nativesdk.bbclass
