@@ -32,7 +32,7 @@ SRC_URI += " \
 #     file://0001-Temp-fix-for-elink-redesign.patch
 
 # elink-redesign 2015-11-18
-SBRANCH = "elink-redesign"
+SBRANCH = "old-outdated-elink-redesign"
 SRCREV = "bc94590302ce96e626c1f45e13746aa3b2b54946"
 
 ## Setup cross compiler for e-lib perhaps override things from nativesdk.bbclass
