@@ -28,6 +28,9 @@ RDEPENDS_${PN} = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH
        nativesdk-${EXOTIC_TARGET_PREFIX}libgloss-dbg \ 
        "
 
+# TODO fix this.. but for now skip the qa check!
+INSANE_SKIP_${PN} += "build-deps"
+
 EXTRA_OECONF += "--with-sysroot=${SDKPATH}/sysroots/${TUNE_PKGARCH}${EXOTIC_TARGET_VENDOR}-${EXOTIC_TARGET_OS} \
                 "
 

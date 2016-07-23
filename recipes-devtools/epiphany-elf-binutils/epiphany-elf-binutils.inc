@@ -151,7 +151,7 @@ do_install () {
     rm -rf ${D}${prefix}/include
     rm -rf ${D}${prefix}/share
 
-	oe_multilib_header bfd.h
+	# oe_multilib_header bfd.h
 }
 
 inherit update-alternatives

@@ -84,8 +84,8 @@ SRC_URI += " \
     file://target-gcc-includedir.patch \
     "
 
-#    file://0050-PR-target-58595.patch \
-#
+#    file://0050-PR-target-58595.patch
+#    file://0051-gcc-483-universal-initializer-no-warning.patch 
 
 # Tag: epiphany-gcc-esdk-2014.11
 SRCREV = "005a35955747a2da8a48afdbbe00d80a12e41dde"
