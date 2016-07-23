@@ -1,6 +1,6 @@
 ##################################################################
 #
-# This recipe is for version version 2015.1
+# This recipe is for version version 2016.3.1
 #
 ##################################################################
 
@@ -20,20 +20,20 @@ DEPENDS =+ "epiphany-elf-newlib epiphany-elf-libgcc virtual/kernel kernel-devsrc
 
 ## Define the source directory to help locate the LICENSE file
 S = "${WORKDIR}/git"
+B = "${WORKDIR}/git"
 
 SRC_URI = " git://github.com/adapteva/epiphany-libs.git;branch=${SBRANCH}"
 
 ## Add the patch file
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/files:"
 SRC_URI += " \
-    file://epiphany-libs.patch \
+    file://0001-simplebuild.patch \
+    file://0002-correct-sys-header-file.patch \
 "
 
-#     file://0001-Temp-fix-for-elink-redesign.patch
-
-# elink-redesign 2015-11-18
-SBRANCH = "old-outdated-elink-redesign"
-SRCREV = "bc94590302ce96e626c1f45e13746aa3b2b54946"
+# 2016.3.1
+SBRANCH = "2016.3"
+SRCREV = "9dd1c21bf6e0614e7e2d606c32862d3a0b838f20"
 
 ## Setup cross compiler for e-lib perhaps override things from nativesdk.bbclass
 export EPIPHANY_CROSS_COMPILE="${STAGING_DIR_NATIVE}/usr/bin/epiphany-elf/epiphany-elf-"
@@ -57,16 +57,6 @@ FILES_${PN} = " \
     ${prefix}/epiphany/epiphany-sdk/bsps/parallella_E16G3_1GB/*.pdf \
     ${prefix}/epiphany/epiphany-sdk/bsps/parallella_E16G3_1GB/*.hdf \
     ${prefix}/epiphany/epiphany-sdk/bsps/parallella_E16G3_1GB/*.xml \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E16G3_512mb/*.ldf \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E16G3_512mb/*.so \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E16G3_512mb/*.pdf \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E16G3_512mb/*.hdf \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E16G3_512mb/*.xml \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E64G4_512mb/*.ldf \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E64G4_512mb/*.so \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E64G4_512mb/*.pdf \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E64G4_512mb/*.hdf \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E64G4_512mb/*.xml \
     ${prefix}/epiphany/epiphany-sdk/tools \
     ${prefix}/include/epiphany-hal.h \
     ${prefix}/include/epiphany-hal-api.h \
@@ -74,7 +64,8 @@ FILES_${PN} = " \
     ${prefix}/include/epiphany-hal-data-local.h \
     ${prefix}/include/epiphany-shm-manager.h \
     ${prefix}/include/a_trace.h \
-    ${prefix}/include/a_trace_shared.h \
+    ${prefix}/include/e-trace.h \
+    ${prefix}/include/e_trace_shared.h \
     ${prefix}/include/e-hal.h \
     ${prefix}/include/e-loader.h \
     ${prefix}/include/e_loader.h \
@@ -99,8 +90,6 @@ INSANE_SKIP_${PN} += "libdir"
 
 FILES_${PN}-dbg += "\
     ${prefix}/epiphany/epiphany-sdk/bsps/parallella_E16G3_1GB/.debug \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E16G3_512mb/.debug \
-    ${prefix}/epiphany/epiphany-sdk/bsps/zed_E64G4_512mb/.debug \
     ${prefix}/lib/epiphany-elf/.debug/ \
 "
 INSANE_SKIP_${PN}-dbg += "libdir"
@@ -109,6 +98,12 @@ INSANE_SKIP_${PN}-dbg += "libdir"
 # this allows epiphany-elf code (e-lib) to be packaged alongside arm code
 INSANE_SKIP_${PN} += "arch"
 INSANE_SKIP_${PN}-dbg += "arch"
+
+TARGET_CFLAGS += " \
+	      -I${S}/e-lib/src \
+	      -I${S}/e-hal/src \
+	      -I${STAGING_DIR_HOST}/usr/include \
+"
 
 do_install_append () {
 

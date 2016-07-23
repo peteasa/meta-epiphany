@@ -1,0 +1,1048 @@
+diff --git a/Makefile b/Makefile
+new file mode 100644
+index 0000000..4c6b434
+--- /dev/null
++++ b/Makefile
+@@ -0,0 +1,25 @@
++
++DIRS =		e-xml	\
++		e-server	\
++		e-loader	\
++		e-hal	\
++		e-utils \
++		e-lib
++
++
++.PHONY: all $(DIRS)
++.PHONY: clean $(DIRS)
++.PHONY: install $(DIRS)
++
++all: $(DIRS)
++
++clean: $(DIRS)
++
++install: $(DIRS)
++
++$(DIRS):
++	@echo "**************************************************"
++	@echo Building target: $@
++	@echo Goals: $(MAKECMDGOALS)
++	@echo "**************************************************"
++	$(MAKE) -C $@ $(MAKECMDGOALS)
+diff --git a/build_tools/Makefile.exe.tmpl b/build_tools/Makefile.exe.tmpl
+new file mode 100644
+index 0000000..384ebd4
+--- /dev/null
++++ b/build_tools/Makefile.exe.tmpl
+@@ -0,0 +1,45 @@
++# <REQUIRED - this is the path to the workspace root, i.e., the top level build directory>
++BUILD_ROOT  	= ..
++
++# <REQUIRED - exe binary name>
++EXENAME			=
++
++# <OPTIONAL - any additional compiler flags needed to build this module>
++EXTRACXXFLAGS  	= 
++
++# <OPTIONAL - any additional linker flags needed to build this module>
++EXTRALINKFLAGS  =
++
++# List of include search paths
++INCLUDES    = \
++	-I./include						\
++	-I<another include path>		\
++	-I<yet another include path>
++
++# List of Library search paths
++LIB_PATHS   = \
++	-L$(BUILD_ROOT)/x3c/lib			\
++	-L<another library path>		\
++	-L<yet another library path>
++
++# List of libraries to link
++LIBS        =  \
++	-lx3cCommon						\
++	-l<some lib>					\
++	-l<some other lib>
++
++
++# <OPTIONAL - a colon sperated list of any subirectoriess othar than
++# 'src' which contain .cpp sources>
++vpath %cpp <source paths>
++
++# <REQUIRED - CPP sources to be built, e.g., cparser_tree.c>
++SRCS		= \
++	<some source file>.cpp
++
++# <OPTIONAL - C sources to be built, e.g., cparser_tree.c>
++C_SRC       = \
++	<some source file>.c
++
++# REQUIRED - Include the X3C rules for building executable binaries
++include $(BUILD_ROOT)/x3c/scripts/build/x3c_make_exe.rules
+diff --git a/build_tools/Makefile.lib.tmpl b/build_tools/Makefile.lib.tmpl
+new file mode 100644
+index 0000000..7cff802
+--- /dev/null
++++ b/build_tools/Makefile.lib.tmpl
+@@ -0,0 +1,30 @@
++# <REQUIRED - this is the path to the workspace root, i.e., the top level build directory>
++BUILD_ROOT  	= ..
++
++# <REQUIRED - library name - sans the 'lib' prefix and file extension>
++LIBNAME			=
++
++# <OPTIONAL - any additional compiler flags needed to build this module>
++EXTRACXXFLAGS  	= <any additional compiler flags needed to build this module>
++
++# List of include search paths
++INCLUDES    = \
++	-I./include						\
++	-I$(BUILD_ROOT)/x3c/include		\
++	-I<another include path>		\
++	-I<yet another include path>
++
++# <OPTIONAL - a colon sperated list of any subirectoriess othar than
++# 'src' which contain .cpp sources>
++vpath %cpp <source paths>
++
++# <REQUIRED - CPP sources to be built, e.g., cparser_tree.c>
++SRCS		= \
++	<some source file>.cpp
++
++# <OPTIONAL - C sources to be built, e.g., cparser_tree.c>
++C_SRCS      = \
++	<some source file>.c
++
++# REQUIRED - Include the X3C rules for building libraries
++include $(BUILD_ROOT)/x3c/scripts/build/x3c_make_lib.rules
+diff --git a/build_tools/Makefile.sharedlib.tmpl b/build_tools/Makefile.sharedlib.tmpl
+new file mode 100644
+index 0000000..0b1a7f1
+--- /dev/null
++++ b/build_tools/Makefile.sharedlib.tmpl
+@@ -0,0 +1,41 @@
++# <REQUIRED - this is the path to the workspace root, i.e., the top level build directory>
++BUILD_ROOT  	= ..
++
++# <REQUIRED - library name - sans the 'lib' prefix and file extension>
++LIBNAME			=
++
++# <REQUIRED - for shared object versioning
++LIBVERMAJ       = .1
++LIBVERMIN       = .0
++LIBVERBLD       = .0
++
++# Libraries to link with
++LIBS			= -lLtXml10
++
++# <OPTIONAL - any additional compiler flags needed to build this module>
++EXTRACXXFLAGS  	= <any additional compiler flags needed to build this module>
++
++# List of include search paths
++INCLUDES    = \
++	-I./include						\
++	-I$(BUILD_ROOT)/x3c/include		\
++	-I<another include path>		\
++	-I<yet another include path>
++
++# All target defaulting to debug builds
++all: debug install
++
++# <OPTIONAL - a colon sperated list of any subirectoriess othar than
++# 'src' which contain .cpp sources>
++vpath %.cpp <source paths>
++
++# <REQUIRED - CPP sources to be built, e.g., cparser_tree.c>
++SRCS		= \
++	<some source file>.cpp
++
++# <OPTIONAL - C sources to be built, e.g., cparser_tree.c>
++C_SRCS      = \
++	<some source file>.c
++
++include $(BUILD_ROOT)/x3c/scripts/build/x3c_make_sharedlib.rules
++
+diff --git a/build_tools/make_common.rules b/build_tools/make_common.rules
+new file mode 100644
+index 0000000..82980af
+--- /dev/null
++++ b/build_tools/make_common.rules
+@@ -0,0 +1,114 @@
++#CXXFLAGS    	= -Wall -Wextra
++#CFLAGS          = -Wall -Wextra
++RELEASEFLAGS  	= -DNDEBUG -O3
++DEBUGFLAGS  	= -O0 -g
++RELEASEDIR  	= Release
++DEBUGDIR   		= Debug
++DEPDIR 			= .deps
++df 				= $(basename $(DEPDIR)/$@)
++
++##
++## Rules for cross compiling for epiphany-elf do not need these
++##
++##ifneq (,$(findstring arm-poky-linux-gnueabi,$(CROSS_COMPILE)))
++#CXXFLAGS += -march=armv7-a -mthumb-interwork -mfloat-abi=hard -mfpu=neon
++#CFLAGS += -march=armv7-a -mthumb-interwork -mfloat-abi=hard -mfpu=neon
++#CXXFLAGS += --sysroot=/opt/poky/1.7/sysroots/armv7ahf-vfp-neon-poky-linux-gnueabi
++#CXXFLAGS += -isysroot /opt/poky/1.7/sysroots/armv7ahf-vfp-neon-poky-linux-gnueabi
++#CFLAGS += --sysroot=/opt/poky/1.7/sysroots/armv7ahf-vfp-neon-poky-linux-gnueabi
++#CFLAGS += -isysroot /opt/poky/1.7/sysroots/armv7ahf-vfp-neon-poky-linux-gnueabi
++##endif
++
++INSTALL 		= /usr/bin/install
++
++RELOBJS    := $(SRCS:%.cpp=$(RELEASEDIR)/%.o) 
++DBGOBJS    := $(SRCS:%.cpp=$(DEBUGDIR)/%.o) 
++C_RELOBJS  := $(C_SRCS:%.c=$(RELEASEDIR)/%.o)
++C_DBGOBJS  := $(C_SRCS:%.c=$(DEBUGDIR)/%.o)
++S_DBGOBJS  := $(S_SRCS:%.s=$(DEBUGDIR)/%.o)
++S_RELOBJS  := $(S_SRCS:%.s=$(RELEASEDIR)/%.o)
++
++# vpath for src subdir
++vpath %.cpp src
++vpath %.c src
++vpath %.s src
++
++## Allow yocto to provide these
++#CXX = $(CROSS_COMPILE)g++
++#CC  = $(CROSS_COMPILE)gcc
++#AR  = $(CROSS_COMPILE)ar
++#LD  = $(CROSS_COMPILE)ld
++#AS  = $(CROSS_COMPILE)as
++
++# All target
++all:  debug release $(TESTAPP1) $(TESTAPP2) $(TESTAPP3)
++
++# Object file target for debug (.cpp sources)
++$(DEBUGDIR)/%.o: %.cpp
++	$(COMPILE.cc) -MMD $(DEBUGFLAGS) $(CPPFLAGS) $(INCLUDES) $(EXTRACXXFLAGS) $(EXTRADEBUGFLAGS) -o $@ $<
++	@cp $(basename $@).d $(df).P; \
++		sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
++			-e '/^$$/ d' -e 's/$$/ :/' < $(basename $@).d >> $(df).P; \
++	rm -f $(basename $@).d $(df).d
++
++# Object file target for release
++$(RELEASEDIR)/%.o: %.cpp
++	$(COMPILE.cc) -MMD $(RELEASEFLAGS) $(CPPFLAGS) $(INCLUDES) $(EXTRACXXFLAGS) -o $@ $<
++	@cp $(basename $@).d $(df).P; \
++		sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
++			-e '/^$$/ d' -e 's/$$/ :/' < $(basename $@).d >> $(df).P; \
++	rm -f $(basename $@).d $(df).d
++
++# Object file target for debug (.c sources)
++$(DEBUGDIR)/%.o: %.c
++	$(COMPILE.c) -MD $(INCLUDES) $(DEBUGFLAGS) $(EXTRACFLAGS) $(EXTRADEBUGFLAGS) -o $@ $<
++	@cp $(basename $@).d $(df).P; \
++	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
++		-e '/^$$/ d' -e 's/$$/ :/' < $(basename $@).d >> $(df).P; \
++	rm -f $(basename $@).d $(df).d
++
++# Object file target for release (.c sources)
++$(RELEASEDIR)/%.o: %.c
++	$(COMPILE.c) -MD $(DEBUGFLAGS) $(EXTRACFLAGS) $(INCLUDES) -o $@ $<
++	@cp $(basename $@).d $(df).P; \
++	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
++		-e '/^$$/ d' -e 's/$$/ :/' < $(basename $@).d >> $(df).P; \
++	rm -f $(basename $@).d $(df).d
++
++# Object file target for debug (.s sources)
++$(DEBUGDIR)/%.o: %.s
++	$(AS) -o $@ $<
++
++# Object file target for release (.s sources)
++$(RELEASEDIR)/%.o: %.s
++	$(AS) -o $@ $<
++
++# Include directive for debug dependencies (C++ Source files)
++-include $(SRCS:%.cpp=$(DEPDIR)/$(DEBUGDIR)/%.P)
++# Include directive for debug dependencies (C Source files)
++-include $(C_SRCS:%.c=$(DEPDIR)/$(DEBUGDIR)/%.P)
++
++# Include directive for release dependencies (C++ Source files)
++-include $(SRCS:%.cpp=$(DEPDIR)/$(RELEASEDIR)/%.P)
++# Include directive for debug dependencies (C Source files)
++-include $(C_SRCS:%.c=$(DEPDIR)/$(RELEASEDIR)/%.P)
++
++# Rule for generating preprocessed header files
++%.i: %.h
++	$(COMPILE.cc) -E $(DEBUGFLAGS) $(EXTRACXXFLAGS) $(INCLUDES) -o $@ $<
++
++# Rule for generating preprocessed header files
++%.i: %.cpp
++	$(COMPILE.cc) -E $(DEBUGFLAGS) $(EXTRACXXFLAGS) $(INCLUDES) -o $@ $<
++
++# Scrub rule (clean and remove dependencies and emacs TAGS files and backup files)
++scrub: clean
++	$(RM) -r *~ TAGS src/*~ src/TAGS include/*~ include/TAGS $(RELEASEDIR) $(DEBUGDIR) $(DEPDIR)
++
++.PHONY: all release debug scrub 
++
++# Commands for creating directories
++$(shell mkdir -p $(DEPDIR)/$(RELEASEDIR))
++$(shell mkdir -p $(DEPDIR)/$(DEBUGDIR))
++$(shell mkdir -p $(DEBUGDIR))
++$(shell mkdir -p $(RELEASEDIR))
+diff --git a/build_tools/make_exe.rules b/build_tools/make_exe.rules
+new file mode 100644
+index 0000000..199bf5c
+--- /dev/null
++++ b/build_tools/make_exe.rules
+@@ -0,0 +1,25 @@
++# Pickup common rules
++include $(BUILD_ROOT)/build_tools/make_common.rules
++
++# Link rule for release executables
++$(RELEASEDIR)/$(EXENAME): $(RELOBJS) $(C_RELOBJS) $(S_RELOBJS) 
++	$(LINK.cc) $(EXTRALINKFLAGS) -o $@ $^ $(LIB_PATHS) $(LIBS)
++
++# Link rule for debug executables
++$(DEBUGDIR)/$(EXENAME): $(DBGOBJS) $(C_DBGOBJS) $(S_DBGOBJS)
++	$(LINK.cc) $(EXTRALINKFLAGS) -o $@ $^ $(DBG_LIB_PATHS) $(LIBS)
++
++# Release target for executables
++release: $(RELEASEDIR)/$(EXENAME)
++
++# Debug target for executables
++debug: $(DEBUGDIR)/$(EXENAME)
++
++# Clean target
++clean::
++	$(RM) -r $(DEPDIR) $(DEBUGDIR)/*.o $(RELEASEDIR)/*.o $(DEBUGDIR)/$(EXENAME) $(RELEASEDIR)/$(EXENAME) include/*.i *.i
++
++
++.PHONY: release debug clean
++
++
+diff --git a/build_tools/make_lib.rules b/build_tools/make_lib.rules
+new file mode 100644
+index 0000000..257e198
+--- /dev/null
++++ b/build_tools/make_lib.rules
+@@ -0,0 +1,32 @@
++################################################################
++## Rules for building static libraries 
++##
++
++# Pickup common rules
++include $(BUILD_ROOT)/build_tools/make_common.rules
++
++LIBEXT			= .a
++
++# Release target for libraries
++release: $(RELEASEDIR)/lib$(LIBNAME)$(LIBEXT)
++
++# Debug target for libraries
++debug: $(DEBUGDIR)/lib$(LIBNAME)$(LIBEXT)
++
++# Link rule for release libraries
++$(RELEASEDIR)/lib$(LIBNAME)$(LIBEXT): $(RELOBJS) $(C_RELOBJS) $(S_RELOBJS)  
++	$(AR) rvs $@ $^ 
++
++# Link rule for debug libraries
++$(DEBUGDIR)/lib$(LIBNAME)$(LIBEXT): $(DBGOBJS) $(C_DBGOBJS) $(S_DBGOBJS)
++	$(AR) rvs $@ $^ 
++
++# Clean target
++clean:
++	$(RM) -r $(DEPDIR)/$(DEBUGDIR)/*.P $(DEPDIR)/$(RELEASEDIR)/*.P 				\
++		$(DEBUGDIR)/*.o $(RELEASEDIR)/*.o $(DEBUGDIR)/lib$(LIBNAME)_d$(LIBEXT) 	\
++		$(RELEASEDIR)/lib$(LIBNAME)$(LIBEXT) include/*.i  *.i
++
++
++.PHONY: release debug clean
++
+diff --git a/build_tools/make_sharedlib.rules b/build_tools/make_sharedlib.rules
+new file mode 100644
+index 0000000..33f7aca
+--- /dev/null
++++ b/build_tools/make_sharedlib.rules
+@@ -0,0 +1,60 @@
++################################################################
++## Rules for building shared libraries 
++##
++
++# Pickup common rules
++include $(BUILD_ROOT)/build_tools/make_common.rules
++
++LIBEXT		    = .so
++LIBSONAME      	= lib$(LIBNAME)$(LIBEXT)$(LIBVERMAJ)
++LIBREALNAME    	= $(LIBSONAME)$(LIBVERMIN)$(LIBVERBLD)
++
++## to debug compiler problems add --verbose 
++CXXFLAGS 	   += -fPIC 
++CFLAGS         += -fPIC 
++
++## to debug linker problems add -Wl,--verbose
++LNK	 		    = $(CC) -shared -Wl,-soname,$(LIBSONAME)
++
++INSTALL_DIR		= $(BUILD_ROOT)/x3c/lib
++
++LIBRELOBJS    = $(SRCS:%.cpp=$(RELEASEDIR)/%.o) 
++LIBDBGOBJS    = $(SRCS:%.cpp=$(DEBUGDIR)/%.o) 
++C_LIBRELOBJS  = $(C_SRCS:%.c=$(RELEASEDIR)/%.o)
++C_LIBDBGOBJS  = $(C_SRCS:%.c=$(DEBUGDIR)/%.o)
++S_LIBRELOBJS  = $(S_SRCS:%.s=$(RELEASEDIR)/%.o)
++S_LIBDBGOBJS  = $(S_SRCS:%.s=$(DEBUGDIR)/%.o)
++
++all: debug release
++
++# Release target for libraries
++release: $(RELEASEDIR)/$(LIBREALNAME)
++
++# Debug target for libraries
++debug: $(DEBUGDIR)/$(LIBREALNAME)
++
++# Link rule for release libraries
++$(RELEASEDIR)/$(LIBREALNAME): $(LIBRELOBJS) $(C_LIBRELOBJS)
++	$(LNK) -o $@ $^ $(LIB_PATHS) $(LIBS)
++
++# Link rule for debug libraries
++$(DEBUGDIR)/$(LIBREALNAME): $(LIBDBGOBJS)  $(C_DBGOBJS)
++	$(LNK) -o $@ $^ $(LIB_PATHS) $(LIBS)
++
++# For now, the install rule defaults to installing the Debug version
++# install: $(DEBUGDIR)/$(LIBREALNAME)
++# 	@echo "Installing $< to $(INSTALL_DIR) ..."
++# 	@$(INSTALL) -p -D --mode=664 $< $(INSTALL_DIR)
++# 	@echo "Running ldconfig on $(INSTALL_DIR) ..."
++# 	@/sbin/ldconfig -n $(INSTALL_DIR)
++# 	@echo "Creating symbolic link $(INSTALL_DIR)/lib$(LIBNAME)$(LIBEXT) -> $(LIBREALNAME)"
++# 	@ln -sf $(LIBREALNAME) $(INSTALL_DIR)/lib$(LIBNAME)$(LIBEXT) 
++
++# Clean target
++clean:
++	$(RM) -r $(DEPDIR)/$(DEBUGDIR)/*.P $(DEPDIR)/$(RELEASEDIR)/*.P 				\
++		$(DEBUGDIR)/*.o $(RELEASEDIR)/*.o $(DEBUGDIR)/$(LIBREALNAME)		 	\
++		$(RELEASEDIR)/$(LIBREALNAME) include/*.i  *.i
++
++.PHONY: release debug clean install
++
+diff --git a/e-hal/Makefile b/e-hal/Makefile
+new file mode 100644
+index 0000000..e0a2e09
+--- /dev/null
++++ b/e-hal/Makefile
+@@ -0,0 +1,38 @@
++##############################################################################
++## e-hal Makefile
++##
++## NOTE: the environment variable PKG_CONFIG_SYSROOT_DIR points
++## to the usr/include sysroot folder
++
++BUILD_ROOT  	= ..
++
++LIBNAME			= e-hal
++
++# <REQUIRED - for shared object versioning
++#LIBVERMAJ       = .1
++#LIBVERMIN       = .0
++#LIBVERBLD       = .0
++
++# LIB_PATHS   = 
++
++# Libraries to link with
++# LIBS=
++
++EXTRACFLAGS  	= -fmessage-length=0 -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
++
++# List of include search paths
++# 	
++INCLUDES    = \
++	-I../										\
++	-I./src										\
++	-I$(PKG_CONFIG_SYSROOT_DIR)/usr/include
++
++
++C_SRCS      = \
++	esim-target.c			\
++	epiphany-memman.c		\
++	epiphany-shm-manager.c		\
++	epiphany-hal-legacy.c 		\
++	epiphany-hal.c
++
++include $(BUILD_ROOT)/build_tools/make_sharedlib.rules
+diff --git a/e-lib/Makefile b/e-lib/Makefile
+new file mode 100644
+index 0000000..48e98e5
+--- /dev/null
++++ b/e-lib/Makefile
+@@ -0,0 +1,65 @@
++BUILD_ROOT  	= ..
++
++## This library is always compiled for the epiphany cores
++CROSS_COMPILE=$(EPIPHANY_CROSS_COMPILE)
++CXX = $(CROSS_COMPILE)g++
++CC  = $(CROSS_COMPILE)gcc
++AR  = $(CROSS_COMPILE)ar
++LD  = $(CROSS_COMPILE)ld
++AS  = $(CROSS_COMPILE)as
++
++CXXFLAGS    	= -Wall -Wextra -isystem$(EPIPHANY_ELF_INCLUDE)
++CFLAGS          = -Wall -Wextra -isystem$(EPIPHANY_ELF_INCLUDE)
++
++LIBNAME			= e-lib
++
++EXTRACFLAGS  	= -falign-loops=8 -fmessage-length=0 -ffp-contract=fast \
++	 -mlong-calls -mfp-mode=round-nearest
++
++# List of include search paths
++INCLUDES    = \
++	-I./include								\
++	-I../e-trace/include			\
++	-I$(PARALLELLA_LINUX_HOME)/include/uapi
++
++C_SRCS      = \
++	e_coreid_config.c 					\
++	e_coreid_coords_from_coreid.c 		\
++	e_coreid_from_coords.c 				\
++	e_coreid_get_coreid.c 				\
++	e_coreid_get_global_address.c 		\
++	e_coreid_is_oncore.c 				\
++	e_coreid_neighbor_id.c 				\
++	e_ctimer_stop.c 					\
++	e_ctimer_wait.c 					\
++	e_dma_busy.c 						\
++	e_dma_copy.c 						\
++	e_dma_set_desc.c					\
++	e_dma_start.c 						\
++	e_dma_wait.c 						\
++	e_irq_attach.c 						\
++	e_irq_clear.c 						\
++	e_irq_global_mask.c 				\
++	e_irq_mask.c 						\
++	e_irq_set.c 						\
++	e_mem_read.c 						\
++	e_mem_write.c 						\
++	e_mutex_barrier.c 					\
++	e_mutex_barrier_init.c 				\
++	e_mutex_init.c 						\
++	e_mutex_lock.c 						\
++	e_mutex_trylock.c 					\
++	e_mutex_unlock.c 					\
++	e_reg_read.c 						\
++	e_reg_write.c 						\
++	e_shm.c								\
++	e_trace.c
++#	e_trace_dma.c
++
++S_SRCS = \
++	e_ctimer_get.s \
++	e_ctimer_set.s \
++	e_ctimer_start.s 
++
++include $(BUILD_ROOT)/build_tools/make_lib.rules
++
+diff --git a/e-loader/Makefile b/e-loader/Makefile
+new file mode 100644
+index 0000000..829fd0c
+--- /dev/null
++++ b/e-loader/Makefile
+@@ -0,0 +1,33 @@
++##############################################################################
++## e-loader Makefile
++##
++
++BUILD_ROOT  	= ..
++
++LIBNAME			= e-loader
++
++# <REQUIRED - for shared object versioning
++#LIBVERMAJ       = .1
++#LIBVERMIN       = .0
++#LIBVERBLD       = .0
++
++LIB_PATHS   = \
++    -L$(BUILD_ROOT)/e-loader/Release
++
++# Libraries to link with
++# LIBS= 
++
++EXTRACFLAGS  	= -fmessage-length=0 -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
++
++# List of include search paths
++# 	
++INCLUDES    = \
++	-I../../e-hal/src
++
++
++C_SRCS      = \
++	../../e-hal/src/e-loader.c		\
++	../../e-hal/src/esim-target.c 		\
++	../../e-hal/src/e-process-SREC.c
++
++include $(BUILD_ROOT)/build_tools/make_sharedlib.rules
+diff --git a/e-server/Makefile b/e-server/Makefile
+new file mode 100644
+index 0000000..ae43fee
+--- /dev/null
++++ b/e-server/Makefile
+@@ -0,0 +1,70 @@
++# Copyright (C) 2010-2014 Adapteva Inc
++# Copyright (C) 2014 Embecosm Limited
++
++# Contributor Oleg Rhaikonen, Adapteva
++# Contributor Yaniv Sapir, Adapteva
++# Contributor Jeremy Bennett <jeremy.bennett@embecosm.com>
++# Contributor Ben Chaco <bchaco@x3-c.com>
++
++# This file is part of the Embecosm build system for Epiphany
++
++# This program is free software; you can redistribute it and/or modify it
++# under the terms of the GNU General Public License as published by the Free
++# Software Foundation; either version 3 of the License, or (at your option)
++# any later version.
++
++# This program is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++
++# You should have received a copy of the GNU General Public License along
++# with this program.  If not, see <http://www.gnu.org/licenses/>.
++
++#BUILD_ROOT  	= $(EPIPHANY_HOME)/../
++BUILD_ROOT  	= ..
++
++EXENAME			= e-server
++
++# <REQUIRED - for shared object versioning
++#LIBVERMAJ       = .1
++#LIBVERMIN       = .0
++#LIBVERBLD       = .0
++
++LIB_PATHS       = \
++	-L../e-xml/Release
++
++DBG_LIB_PATHS = \
++	-L../e-xml/Debug
++
++# Libraries to link with
++LIBS			= \
++	-lpthread			\
++	-ldl				\
++	-le-xml
++
++EXTRACFLAGS  	= -fmessage-length=0
++
++# List of include search paths
++INCLUDES    = \
++	-I../						\
++	-I../e-hal/src				\
++	-I../e-loader/src \
++	-I../e-xml/src
++
++SRCS      = \
++        CoreId.cpp \
++        GdbServer.cpp \
++        MemRange.cpp \
++        MpHash.cpp \
++        ProcessInfo.cpp \
++        RspConnection.cpp \
++        RspPacket.cpp \
++        ServerInfo.cpp \
++        TargetControl.cpp \
++        TargetControlHardware.cpp \
++        Thread.cpp \
++        Utils.cpp \
++        main.cpp
++
++include $(BUILD_ROOT)/build_tools/make_exe.rules
+diff --git a/e-trace/Makefile b/e-trace/Makefile
+new file mode 100644
+index 0000000..357f3ed
+--- /dev/null
++++ b/e-trace/Makefile
+@@ -0,0 +1,29 @@
++##############################################################################
++## e-trace library Makefile
++##
++BUILD_ROOT  	= ..
++
++LIBNAME			= e-trace
++
++# <REQUIRED - for shared object versioning>
++#LIBVERMAJ       = .1
++#LIBVERMIN       = .0
++#LIBVERBLD       = .0
++
++# Libraries to link with
++LIBS			= 
++
++EXTRACFLAGS  	= -v -fmessage-length=0 -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
++
++# List of include search paths
++INCLUDES    = \
++	-I$./include	\
++	-I$(BUILD_ROOT)/e-hal/src
++
++C_SRCS      = \
++	e_trace.c	\
++	e-trace-dma	\
++	e-trace-dump	\
++	e-trace-server
++
++include $(BUILD_ROOT)/build_tools/make_sharedlib.rules
+diff --git a/e-utils/Makefile b/e-utils/Makefile
+new file mode 100644
+index 0000000..0aa3775
+--- /dev/null
++++ b/e-utils/Makefile
+@@ -0,0 +1,27 @@
++
++DIRS =		e-clear-shmtable	\
++		e-dump-regs	\
++		e-hw-rev	\
++		e-loader	\
++		e-meshdump	\
++		e-read	\
++		e-reset	\
++		e-write
++
++
++.PHONY: all $(DIRS)
++.PHONY: clean $(DIRS)
++.PHONY: install $(DIRS)
++
++all: $(DIRS)
++
++clean: $(DIRS)
++
++install: $(DIRS)
++
++$(DIRS):
++	@echo "**************************************************"
++	@echo Building target: $@
++	@echo Goals: $(MAKECMDGOALS)
++	@echo "**************************************************"
++	$(MAKE) -C $@ $(MAKECMDGOALS)
+diff --git a/e-utils/e-clear-shmtable/Makefile b/e-utils/e-clear-shmtable/Makefile
+new file mode 100644
+index 0000000..adc7835
+--- /dev/null
++++ b/e-utils/e-clear-shmtable/Makefile
+@@ -0,0 +1,29 @@
++#BUILD_ROOT  	= $(EPIPHANY_HOME)/../
++BUILD_ROOT  	= ../..
++
++EXENAME			= e-clear-shmtable
++EXTRACFLAGS  	= -fmessage-length=0
++EXTRALINKFLAGS  =
++
++INCLUDES    = \
++	-I../../e-hal/src 			\
++
++LIB_PATHS   = \
++	-L../../e-hal/Release 		\
++    -L../../e-loader/Release
++
++DBG_LIB_PATHS = \
++	-L../../e-hal/Debug 		\
++    -L../../e-loader/Debug
++
++LIBS        = \
++	-le-hal						\
++	-le-loader					\
++	-lpthread
++
++
++C_SRCS      = \
++	../../src/e-clear-shmtable.c	
++
++# REQUIRED - Include the X3C rules for building executable binaries
++include $(BUILD_ROOT)/build_tools/make_exe.rules
+diff --git a/e-utils/e-dump-regs/Makefile b/e-utils/e-dump-regs/Makefile
+new file mode 100644
+index 0000000..14e64cf
+--- /dev/null
++++ b/e-utils/e-dump-regs/Makefile
+@@ -0,0 +1,29 @@
++#BUILD_ROOT  	= $(EPIPHANY_HOME)/../
++BUILD_ROOT  	= ../..
++
++EXENAME			= e-dump-regs
++EXTRACFLAGS  	= -fmessage-length=0
++EXTRALINKFLAGS  =
++
++INCLUDES    = \
++	-I../../e-hal/src 			\
++
++LIB_PATHS   = \
++	-L../../e-hal/Release 		\
++    -L../../e-loader/Release
++
++DBG_LIB_PATHS = \
++	-L../../e-hal/Debug 		\
++    -L../../e-loader/Debug
++
++LIBS        = \
++	-le-hal						\
++	-le-loader					\
++	-lpthread
++
++
++C_SRCS      = \
++	../../src/e-dump-regs.c	
++
++# REQUIRED - Include the X3C rules for building executable binaries
++include $(BUILD_ROOT)/build_tools/make_exe.rules
+diff --git a/e-utils/e-hw-rev/Makefile b/e-utils/e-hw-rev/Makefile
+new file mode 100644
+index 0000000..0a55cfa
+--- /dev/null
++++ b/e-utils/e-hw-rev/Makefile
+@@ -0,0 +1,29 @@
++#BUILD_ROOT  	= $(EPIPHANY_HOME)/../
++BUILD_ROOT  	= ../..
++
++EXENAME			= e-hw-rev
++EXTRACFLAGS  	= -fmessage-length=0
++EXTRALINKFLAGS  =
++
++INCLUDES    = \
++	-I../../e-hal/src 			\
++
++LIB_PATHS   = \
++	-L../../e-hal/Release 		\
++    -L../../e-loader/Release
++
++DBG_LIB_PATHS = \
++	-L../../e-hal/Debug 		\
++    -L../../e-loader/Debug
++
++LIBS        = \
++	-le-hal						\
++	-le-loader					\
++	-lpthread
++
++
++C_SRCS      = \
++	../../src/e-hw-rev.c	
++
++# REQUIRED - Include the X3C rules for building executable binaries
++include $(BUILD_ROOT)/build_tools/make_exe.rules
+diff --git a/e-utils/e-loader/Makefile b/e-utils/e-loader/Makefile
+new file mode 100644
+index 0000000..7ea8686
+--- /dev/null
++++ b/e-utils/e-loader/Makefile
+@@ -0,0 +1,29 @@
++#BUILD_ROOT  	= $(EPIPHANY_HOME)/../
++BUILD_ROOT  	= ../..
++
++EXENAME			= e-loader
++EXTRACFLAGS  	= -fmessage-length=0
++EXTRALINKFLAGS  =
++
++INCLUDES    = \
++	-I../../e-hal/src 			\
++
++LIB_PATHS   = \
++	-L../../e-hal/Release 		\
++    -L../../e-loader/Release
++
++DBG_LIB_PATHS = \
++	-L../../e-hal/Debug 		\
++    -L../../e-loader/Debug
++
++LIBS        = \
++	-le-hal						\
++	-le-loader					\
++	-lpthread
++
++
++C_SRCS      = \
++	../../src/e-loader.c	
++
++# REQUIRED - Include the X3C rules for building executable binaries
++include $(BUILD_ROOT)/build_tools/make_exe.rules
+diff --git a/e-utils/e-meshdump/Makefile b/e-utils/e-meshdump/Makefile
+new file mode 100644
+index 0000000..557a26d
+--- /dev/null
++++ b/e-utils/e-meshdump/Makefile
+@@ -0,0 +1,29 @@
++#BUILD_ROOT  	= $(EPIPHANY_HOME)/../
++BUILD_ROOT  	= ../..
++
++EXENAME			= e-meshdump
++EXTRACFLAGS  	= -fmessage-length=0
++EXTRALINKFLAGS  =
++
++INCLUDES    = \
++	-I../../e-hal/src 			\
++
++LIB_PATHS   = \
++	-L../../e-hal/Release 		\
++    -L../../e-loader/Release
++
++DBG_LIB_PATHS = \
++	-L../../e-hal/Debug 		\
++    -L../../e-loader/Debug
++
++LIBS        = \
++	-le-hal						\
++	-le-loader					\
++	-lpthread
++
++
++C_SRCS      = \
++	../../src/e-meshdump.c	
++
++# REQUIRED - Include the X3C rules for building executable binaries
++include $(BUILD_ROOT)/build_tools/make_exe.rules
+diff --git a/e-utils/e-read/Makefile b/e-utils/e-read/Makefile
+new file mode 100644
+index 0000000..d8cdf05
+--- /dev/null
++++ b/e-utils/e-read/Makefile
+@@ -0,0 +1,29 @@
++#BUILD_ROOT  	= $(EPIPHANY_HOME)/../
++BUILD_ROOT  	= ../..
++
++EXENAME			= e-read
++EXTRACFLAGS  	= -fmessage-length=0
++EXTRALINKFLAGS  =
++
++INCLUDES    = \
++	-I../../e-hal/src 			\
++
++LIB_PATHS   = \
++	-L../../e-hal/Release 		\
++    -L../../e-loader/Release
++
++DBG_LIB_PATHS = \
++	-L../../e-hal/Debug 		\
++    -L../../e-loader/Debug
++
++LIBS        = \
++	-le-hal						\
++	-le-loader					\
++	-lpthread
++
++
++C_SRCS      = \
++	../../src/e-read.c	
++
++# REQUIRED - Include the X3C rules for building executable binaries
++include $(BUILD_ROOT)/build_tools/make_exe.rules
+diff --git a/e-utils/e-reset/Makefile b/e-utils/e-reset/Makefile
+new file mode 100644
+index 0000000..72d4b47
+--- /dev/null
++++ b/e-utils/e-reset/Makefile
+@@ -0,0 +1,29 @@
++#BUILD_ROOT  	= $(EPIPHANY_HOME)/../
++BUILD_ROOT  	= ../..
++
++EXENAME			= e-reset
++EXTRACFLAGS  	= -fmessage-length=0
++EXTRALINKFLAGS  =
++
++INCLUDES    = \
++	-I../../e-hal/src 			\
++
++LIB_PATHS   = \
++	-L../../e-hal/Release 		\
++    -L../../e-loader/Release
++
++DBG_LIB_PATHS = \
++	-L../../e-hal/Debug 		\
++    -L../../e-loader/Debug
++
++LIBS        = \
++	-le-hal						\
++	-le-loader					\
++	-lpthread
++
++
++C_SRCS      = \
++	../../src/e-reset.c	
++
++# REQUIRED - Include the X3C rules for building executable binaries
++include $(BUILD_ROOT)/build_tools/make_exe.rules
+diff --git a/e-utils/e-write/Makefile b/e-utils/e-write/Makefile
+new file mode 100644
+index 0000000..4e8f755
+--- /dev/null
++++ b/e-utils/e-write/Makefile
+@@ -0,0 +1,29 @@
++#BUILD_ROOT  	= $(EPIPHANY_HOME)/../
++BUILD_ROOT  	= ../..
++
++EXENAME			= e-write
++EXTRACFLAGS  	= -fmessage-length=0
++EXTRALINKFLAGS  =
++
++INCLUDES    = \
++	-I../../e-hal/src 			\
++
++LIB_PATHS   = \
++	-L../../e-hal/Release 		\
++    -L../../e-loader/Release
++
++DBG_LIB_PATHS = \
++	-L../../e-hal/Debug 		\
++    -L../../e-loader/Debug
++
++LIBS        = \
++	-le-hal						\
++	-le-loader					\
++	-lpthread
++
++
++C_SRCS      = \
++	../../src/e-write.c	
++
++# REQUIRED - Include the X3C rules for building executable binaries
++include $(BUILD_ROOT)/build_tools/make_exe.rules
+diff --git a/e-xml/Makefile b/e-xml/Makefile
+new file mode 100644
+index 0000000..3f8196b
+--- /dev/null
++++ b/e-xml/Makefile
+@@ -0,0 +1,44 @@
++#BUILD_ROOT  	= $(EPIPHANY_HOME)/../
++BUILD_ROOT  	= ..
++
++LIBNAME			= e-xml
++
++# <REQUIRED - for shared object versioning
++# LIBVERMAJ       = .1
++# LIBVERMIN       = .0
++# LIBVERBLD       = .0
++
++EXTRACXXFLAGS  	= -fmessage-length=0 -DPIC -Wno-write-strings -DLINUX -DUNIX
++
++##
++## Not sure why but this is needed
++##
++ifneq (,$(findstring arm-poky-linux-gnueabi,$(CXX)))
++EXTRACXXFLAGS  	+= -D__linux__
++endif
++
++# List of include search paths
++INCLUDES    = \
++	-I../e-hal/src				\
++	-I../e-loader/src
++
++SRCS      = \
++	epiphany_xml.cpp 			\
++	parse.cpp 					\
++	xml.cpp 
++
++
++include $(BUILD_ROOT)/build_tools/make_sharedlib.rules
++
++# Don't export symbols by default
++EXTRA_FLAGS = -fvisibility=hidden
++CFLAGS      += ${EXTRA_FLAGS}
++CXXFLAGS    += ${EXTRA_FLAGS}
++
++# Make all API functions visible
++Release/epiphany_xml.o: CXXFLAGS += -fvisibility=default
++Debug/epiphany_xml.o:   CXXFLAGS += -fvisibility=default
++
++# Link with stdc++
++LNK         += -lstdc++
++
