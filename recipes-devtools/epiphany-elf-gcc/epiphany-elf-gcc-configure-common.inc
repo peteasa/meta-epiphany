@@ -3,6 +3,8 @@
 # exotic-gcc-configure-common.inc
 ##################################################################
 
+require epiphany-elf-gcc-shared-source.inc
+
 EXTRA_OECONF_BASE ?= ""
 EXTRA_OECONF_PATHS ?= ""
 EXTRA_OECONF_INITIAL ?= ""
