@@ -19,10 +19,9 @@ PN = "${EXOTIC_TARGET_PREFIX}gcc-cross-${EXOTIC_TARGET_ARCH}"
 
 require epiphany-elf-gcc-configure-common.inc
 
-# Ensure that the cross-host is the original ${TARGET_SYS}.  This allows
-# us to compile on ${TARGET_SYS} for ${EXOTIC_TARGET_SYS}
 EXTRA_OECONF += "\
-    --with-cross-host=${TARGET_SYS_GVARIABLE}-${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE} \
+    --with-cross-host=${TARGET_SYS_GVARIABLE} \
+    --enable-poison-system-directories \
 "
 
 EXTRA_OECONF_PATHS = "\

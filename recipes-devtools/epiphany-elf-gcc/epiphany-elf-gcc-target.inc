@@ -22,7 +22,7 @@ libexecdir="${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}"
 gcclibdir = "${libdir}/gcc"
 
 EXTRA_OECONF += "\
-    --with-cross-host=arm-poky-linux-gnueabi \
+    --with-cross-host=${TARGET_SYS_GVARIABLE} \
 "
 
 EXTRA_OECONF_PATHS = "\

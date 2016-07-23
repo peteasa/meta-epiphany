@@ -32,7 +32,7 @@ EXTRA_OECONF = "\
     --with-newlib \
     --program-prefix=${EXOTIC_TARGET_PREFIX} \
     ${EXTRA_OECONF_PATHS} \
-    --with-cross-host=${HOST_SYS}-${HOST_VENDOR}-${HOST_OS} \
+    --with-cross-host=${TARGET_SYS_GVARIABLE} \
 "
 
 EXTRA_OECONF_PATHS = "\
@@ -42,7 +42,6 @@ EXTRA_OECONF_PATHS = "\
     --with-build-sysroot=${STAGING_DIR_TARGET} \
 "
 
-## TODO ## TODO fix this up when we have implemented cross-canadian-exotic
 # Override things set in cross-canadian
 STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${SDK_VENDOR}-${SDK_OS}:${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGET_SYS}"
 STAGING_BINDIR_CROSS = "${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGET_SYS}"
