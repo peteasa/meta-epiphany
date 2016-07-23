@@ -29,7 +29,7 @@ EXTRA_OECONF = "\
     --disable-libmudflap \
     --disable-libitm \
     --enable-plugin \
-    --with-newlib \
+    ${EXTRA_OECONF_BASE} \
     --program-prefix=${EXOTIC_TARGET_PREFIX} \
     ${EXTRA_OECONF_PATHS} \
     --with-cross-host=${TARGET_SYS_GVARIABLE} \

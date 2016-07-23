@@ -94,7 +94,12 @@ SRCREV = "005a35955747a2da8a48afdbbe00d80a12e41dde"
 FORTRAN = ""
 JAVA = ""
 
+EXTRA_OECONF_BASE = "\
+    --with-newlib \
+"
+
 EXTRA_OECONF_INITIAL = "\
+    --with-newlib \
     --disable-libmudflap \
     --disable-libgomp \
     --disable-libssp \
@@ -102,15 +107,6 @@ EXTRA_OECONF_INITIAL = "\
     --disable-lto \
     --disable-plugin \
     --enable-decimal-float=no \
-"
-
-EXTRA_OECONF_INTERMEDIATE = "\
-    --disable-libmudflap \
-    --disable-libgomp \
-    --disable-libquadmath \
-    --disable-lto \
-    --disable-plugin \
-    --disable-libssp \
 "
 
 EXTRA_OECONF_PATHS = "\

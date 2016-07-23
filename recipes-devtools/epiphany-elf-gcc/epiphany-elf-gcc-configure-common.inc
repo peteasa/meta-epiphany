@@ -8,10 +8,16 @@ require epiphany-elf-gcc-shared-source.inc
 EXTRA_OECONF_BASE ?= ""
 EXTRA_OECONF_PATHS ?= ""
 EXTRA_OECONF_INITIAL ?= ""
-EXTRA_OECONF_INTERMEDIATE ?= ""
+
+# (following is overridden in
+#    epiphany-gcc-cross-canadian.inc
+#    epiphany-elf-gcc-cross-initial.inc)
 
 EXTRA_OECONF = "\
+    --with-gnu-ld \
+    --enable-shared \
     --enable-multilib \
+    --enable-c99 \
     --disable-gdbtk \
     --disable-werror \
     --enable-fast-install=N/A \
@@ -21,7 +27,7 @@ EXTRA_OECONF = "\
     --disable-libmudflap \
     --disable-libitm \
     --enable-plugin \
-    --with-newlib \
+    ${EXTRA_OECONF_BASE} \
     --program-prefix=${EXOTIC_TARGET_PREFIX} \
     ${EXTRA_OECONF_PATHS} \
 "
