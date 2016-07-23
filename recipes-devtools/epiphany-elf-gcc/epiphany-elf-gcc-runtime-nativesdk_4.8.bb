@@ -119,7 +119,7 @@ FILES_${PN}-libstdc++-staticdev = "\
     ${libdir}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/libsupc++.a \
 "
 
-inherit nativesdk
+inherit nativesdk-exotic
 
 deltask do_configure
 deltask do_compile

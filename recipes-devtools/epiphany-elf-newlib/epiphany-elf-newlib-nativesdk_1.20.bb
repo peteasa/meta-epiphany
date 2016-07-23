@@ -107,7 +107,7 @@ FILES_${PN}-staticdev = "	\
     ${prefix}/${EXOTIC_TARGET_SYS}/lib/* \
 	"
 
-inherit nativesdk
+inherit nativesdk-exotic
 
 ## without empty do_configure and do_compile the DEPENDS condition has no effect!
 ## if newlib is installed then epiphany-elf-gcc-cross-canadian-epiphany does not compile

@@ -110,7 +110,7 @@ FILES_${PN}-staticdev = "	\
     ${prefix}/${EXOTIC_TARGET_SYS}/lib/*.a \
 	"
 
-inherit nativesdk
+inherit nativesdk-exotic
 
 deltask do_configure
 deltask do_compile

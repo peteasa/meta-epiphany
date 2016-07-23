@@ -102,7 +102,7 @@ STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGE
 require epiphany-elf-gcc-${PV}.inc
 require epiphany-elf-libgcc.inc
 
-inherit nativesdk
+inherit nativesdk-exotic
 
 deltask do_configure
 deltask do_compile
