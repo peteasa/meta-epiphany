@@ -92,13 +92,7 @@ HOST_EXEEXT = ""
 # or HOST_?? 
 # or can use the original settings of TARGET_??_GVARIABLE and HOST_??_GVARIABLE
 #
-# For example override STAGING_BINDIR_TOOLCHAIN to match original TARGET
-#
-# STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${TARGET_ARCH_GVARIABLE}${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"
-MULTIMACH_TARGET_SYS = "${PACKAGE_ARCH}${TARGET_VENDOR_GVARIABLE}-${TARGET_OS_GVARIABLE}"
-MULTIMACH_HOST_SYS = "${PACKAGE_ARCH}${HOST_VENDOR_GVARIABLE}-${HOST_OS_GVARIABLE}"
-
-# Move the Staging bin dir to a better location
+# For example move the Staging bin dir to a better location
 STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGET_SYS}"
 
 #
