@@ -10,7 +10,15 @@ HOMEPAGE = "http://www.adapteva.com/epiphany-sdk/"
 BUGTRACKER = "https://github.com/adapteva/epiphany-newlib/issues"
 
 SECTION = "devel"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
+
+LIC_FILES_CHKSUM = "\
+    file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
+    file://COPYING.LIBGLOSS;md5=3b001af45e794098f2d25681da304976 \
+    file://COPYING.NEWLIB;md5=83b8a8d7d3da9eeb75d99feba4fdc614 \
+    file://COPYING3;md5=d32239bcb673463ab874e80d47fae504 \
+    file://COPYING3.LIB;md5=6a6a8e020838b23406c81b19c1d46df6 \
+"
 
 inherit exotic-newlib-common
 
