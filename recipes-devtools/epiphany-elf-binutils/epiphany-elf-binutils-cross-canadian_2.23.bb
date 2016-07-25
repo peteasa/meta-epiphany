@@ -34,3 +34,18 @@ require epiphany-elf-binutils-${PV}.inc
 require epiphany-elf-binutils.inc
 require epiphany-elf-binutils-cross-canadian.inc
 
+#
+# Now update DEPENDS to ensure that the correct libraries get built
+#
+
+DEPENDS += " nativesdk-${EXOTIC_TARGET_PREFIX}newlib nativesdk-${EXOTIC_TARGET_PREFIX}libgloss "
+RDEPENDS_${PN} += "\
+       nativesdk-${EXOTIC_TARGET_PREFIX}newlib \
+       nativesdk-${EXOTIC_TARGET_PREFIX}newlib-staticdev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}newlib-dev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}newlib-dbg \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss-staticdev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss-dev \
+       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss-dbg \
+       "

@@ -9,7 +9,7 @@
 
 require epiphany-elf-libgloss-common.inc
 
-DEPENDS = "virtual/${EXOTIC_TARGET_PREFIX}binutils virtual/${EXOTIC_TARGET_PREFIX}gcc virtual/${EXOTIC_TARGET_PREFIX}g++ ${EXOTIC_TARGET_PREFIX}newlib"
+DEPENDS = "virtual/${EXOTIC_TARGET_PREFIX}binutils virtual/${EXOTIC_TARGET_PREFIX}gcc virtual/${EXOTIC_TARGET_PREFIX}g++ "
 
 PACKAGES = "\
     ${PN} \

@@ -9,7 +9,7 @@ SUMMARY = "GNU binary utilities (cross-canadian for ${EXOTIC_TARGET_ARCH} target
 PN = "${EXOTIC_TARGET_PREFIX}binutils-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 BPN = "${EXOTIC_TARGET_PREFIX}binutils"
 
-DEPENDS = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH} nativesdk-${EXOTIC_TARGET_PREFIX}newlib nativesdk-${EXOTIC_TARGET_PREFIX}libgcc nativesdk-${EXOTIC_TARGET_PREFIX}libgloss nativesdk-${EXOTIC_TARGET_PREFIX}gcc-runtime flex-native bison-native virtual/${HOST_PREFIX}gcc-crosssdk virtual/nativesdk-libc nativesdk-zlib nativesdk-gettext nativesdk-flex"
+DEPENDS = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH} nativesdk-${EXOTIC_TARGET_PREFIX}libgcc nativesdk-${EXOTIC_TARGET_PREFIX}gcc-runtime flex-native bison-native virtual/${HOST_PREFIX}gcc-crosssdk virtual/nativesdk-libc nativesdk-zlib nativesdk-gettext nativesdk-flex"
 
 RDEPENDS_${PN} = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH} \
        nativesdk-${EXOTIC_TARGET_PREFIX}gcc-runtime-dbg \
@@ -18,14 +18,6 @@ RDEPENDS_${PN} = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH
        nativesdk-${EXOTIC_TARGET_PREFIX}libgcc \
        nativesdk-${EXOTIC_TARGET_PREFIX}libgcc-dev \
        nativesdk-${EXOTIC_TARGET_PREFIX}libgcc-libgcov \
-       nativesdk-${EXOTIC_TARGET_PREFIX}newlib \
-       nativesdk-${EXOTIC_TARGET_PREFIX}newlib-staticdev \
-       nativesdk-${EXOTIC_TARGET_PREFIX}newlib-dev \
-       nativesdk-${EXOTIC_TARGET_PREFIX}newlib-dbg \
-       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss \
-       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss-staticdev \
-       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss-dev \
-       nativesdk-${EXOTIC_TARGET_PREFIX}libgloss-dbg \ 
        "
 
 # TODO fix this.. but for now skip the qa check!
@@ -37,7 +29,7 @@ EXTRA_OECONF += "--with-sysroot=${SDKPATH}/sysroots/${TUNE_PKGARCH}${EXOTIC_TARG
 ## TODO work out if we need to override things set in cross-canadian
 #STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${SDK_VENDOR}-${SDK_OS}:${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGET_SYS}"
 #STAGING_BINDIR_CROSS = "${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGET_SYS}"
-# etc .. see exotic-gcc-cross-canadian.inc
+## etc .. see exotic-gcc-cross-canadian.inc
 
 # Override bitbake.conf FILES_${PN} settings as appropriate
 FILES_${PN} = " \

@@ -27,3 +27,8 @@ require epiphany-elf-gcc-${PV}.inc
 
 require epiphany-elf-gcc-runtime.inc
 
+#
+# Now update DEPENDS to ensure that the correct libraries get built
+#
+
+DEPENDS += " ${EXOTIC_TARGET_PREFIX}newlib "

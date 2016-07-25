@@ -33,3 +33,9 @@ require epiphany-elf-newlib-${PV}.inc
 #
 
 require epiphany-elf-libgloss.inc
+
+#
+# Now update DEPENDS to ensure that the correct libraries get built
+#
+
+DEPENDS += " ${EXOTIC_TARGET_PREFIX}newlib "
