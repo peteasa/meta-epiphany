@@ -34,6 +34,11 @@ INSANE_SKIP_${PN} += "build-deps"
 EXTRA_OECONF += "--with-sysroot=${SDKPATH}/sysroots/${TUNE_PKGARCH}${EXOTIC_TARGET_VENDOR}-${EXOTIC_TARGET_OS} \
                 "
 
+## TODO work out if we need to override things set in cross-canadian
+#STAGING_BINDIR_TOOLCHAIN = "${STAGING_DIR_NATIVE}${bindir_native}/${SDK_ARCH}${SDK_VENDOR}-${SDK_OS}:${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGET_SYS}"
+#STAGING_BINDIR_CROSS = "${STAGING_DIR_NATIVE}${bindir_native}/${EXOTIC_TARGET_SYS}"
+# etc .. see exotic-gcc-cross-canadian.inc
+
 # Override bitbake.conf FILES_${PN} settings as appropriate
 FILES_${PN} = " \
 	${bindir}/* \
