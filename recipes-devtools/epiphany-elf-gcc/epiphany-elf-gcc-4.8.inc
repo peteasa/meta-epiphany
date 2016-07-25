@@ -1,11 +1,4 @@
-##################################################################
-# Part two of this refactoring will move this file to
-# exotic-gcc-4.8.inc
-# The SRC_URI will point to official gcc-4.8 source and
-# the following will override that content!
-##################################################################
-
-require epiphany-elf-gcc-common.inc
+inherit exotic-gcc-common
 
 # Third digit in PV should be incremented after a minor release
 
@@ -116,4 +109,3 @@ EXTRA_OECONF_PATHS = "\
     --with-sysroot=${STAGING_DIR_TARGET} \ 
     --with-build-sysroot=${STAGING_DIR_TARGET} \
 "
-

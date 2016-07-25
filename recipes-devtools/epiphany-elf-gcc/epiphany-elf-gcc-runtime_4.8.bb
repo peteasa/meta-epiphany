@@ -25,7 +25,7 @@ require epiphany-elf-gcc-${PV}.inc
 # Now the script
 #
 
-require epiphany-elf-gcc-runtime.inc
+inherit exotic-gcc-runtime
 
 #
 # Now update DEPENDS to ensure that the correct libraries get built

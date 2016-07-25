@@ -1,15 +1,18 @@
-##################################################################
-# Part two of this refactoring will move this file to
-# exotic-newlib-1.20.inc
-# But the exotic version will reference normal newlib and 
-# as a result the .bb file will have to override SRC_URI
-##################################################################
-
 ##
 ## modelled on gcc-${PV}.inc
 ##
 
-require epiphany-elf-newlib-common.inc
+SUMMARY = "GNU newlib ANSI C libraries for ${EXOTIC_TARGET_ARCH} processor"
+DESCRIPTION = "GNU newlib is a simple ANSI C library, math library, and \
+collection of board support packages"
+
+HOMEPAGE = "http://www.adapteva.com/epiphany-sdk/"
+BUGTRACKER = "https://github.com/adapteva/epiphany-newlib/issues"
+
+SECTION = "devel"
+LICENSE = "GPLv3"
+
+inherit exotic-newlib-common
 
 # Third digit in PV should be incremented after a minor release
 

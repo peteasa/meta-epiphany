@@ -21,16 +21,8 @@ inherit exotic-set-cross-paths
 
 require epiphany-elf-binutils-${PV}.inc
 
-##################################################################
-# Part two of this refactoring will make this file an append to
-# the exotic-binutils_2.23.bb file and the following will be
-# the content of that file!
-##################################################################
-
 #
 # Now the script
 #
 
-require epiphany-elf-binutils.inc
-require epiphany-elf-binutils-cross.inc
-
+inherit exotic-binutils-cross

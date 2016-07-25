@@ -21,29 +21,8 @@ inherit exotic-set-paths-host-is-exotic-target
 
 require epiphany-elf-gcc-${PV}.inc
 
-##################################################################
-# Part two of this refactoring will make this file an append to
-# the exotic-libgcc_4.8.bb file and the following will be
-# the content of that file!
-# Consider making it clear that this is gcc with newlib!
-##################################################################
-
 #
 # Now the script
 #
 
-require epiphany-elf-libgcc.inc
-
-inherit nativesdk-exotic
-
-deltask do_configure
-deltask do_compile
-
-DEPENDS = "${EXOTIC_TARGET_PREFIX}gcc-cross-canadian-${EXOTIC_TARGET_ARCH}"
-
-do_install () {
-	   # whilst not fool proof this is the best that can be done for now
-	   mkdir -p ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
-	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/crt*.o ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
-	   cp ${STAGING_DIR}/${MACHINE}/usr/lib/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/libg*.a ${D}${exec_prefix}/${baselib}/${EXOTIC_TARGET_SYS}/gcc/${EXOTIC_TARGET_SYS}/${BINV}/
-}
+inherit exotic-libgcc-nativesdk

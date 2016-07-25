@@ -21,34 +21,8 @@ BASEDEPENDS = "virtual/${HOST_PREFIX_GVARIABLE}gcc virtual/${HOST_PREFIX_GVARIAB
 
 require epiphany-elf-binutils-${PV}.inc
 
-##################################################################
-# Part two of this refactoring will make this file an append to
-# the exotic-binutils_2.23.bb file and the following will be
-# the content of that file!
-##################################################################
-
 #
 # Now the script
 #
 
-require epiphany-elf-binutils.inc
-
-DEPENDS += "flex bison zlib"
-
-EXTRA_OECONF += "--with-sysroot=/ \
-                --enable-shared \
-                --disable-install-libiberty \
-                "
-
-# remove rpath from binaries that contain an rpath with build machine paths
-DEPENDS += "chrpath-replacement-native"
-EXTRANATIVEPATH += "chrpath-native"
-
-do_install_append() {
-        # TODO why does the cross compiler create /lib/lib folder?
-	    rm -rf ${D}${prefix}/lib/lib/libiberty.a
-        rm -rf ${D}${prefix}/lib/ldscripts
-        # Remove rpath from the offending binaries
-        chrpath -d ${D}${bindir}/${EXOTIC_TARGET_PREFIX}ar
-        chrpath -d ${D}${bindir}/${EXOTIC_TARGET_PREFIX}ranlib
-}
+inherit exotic-binutils

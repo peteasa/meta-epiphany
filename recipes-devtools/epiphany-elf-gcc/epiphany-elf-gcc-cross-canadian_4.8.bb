@@ -21,18 +21,8 @@ inherit exotic-set-cross-canadian-paths
 
 require epiphany-elf-gcc-${PV}.inc
 
-##################################################################
-# Part two of this refactoring will make this file an append to
-# the exotic-gcc-cross-canadian_4.8.bb file and the following will be
-# the content of that file!
-# Consider making it clear that this is gcc with newlib!
-##################################################################
-
 #
 # Now the script
 #
 
-require epiphany-elf-gcc-cross-canadian.inc
-
-
-
+inherit exotic-gcc-cross-canadian

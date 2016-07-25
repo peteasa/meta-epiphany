@@ -1,8 +1,18 @@
-##################################################################
-# Part two of this refactoring will require this content to
-# override the content in exotic-binutils-2.23.inc that will
-# itself be based on the official binutils-2.23 release.
-##################################################################
+
+SUMMARY = "GNU binary utilities for epiphany processor"
+DESCRIPTION = "The GNU Binutils are a collection of binary tools. \
+The main ones are ld (GNU Linker), and as (GNU Assembler). This \
+package also includes addition tools such as addr2line (Converts \
+addresses into filenames and line numbers), ar (utility for creating, \
+modifying and extracting archives), nm (list symbols in object \
+files), objcopy (copy and translate object files), objdump (Display \
+object information), and other tools and related libraries."
+
+HOMEPAGE = "http://www.adapteva.com/epiphany-sdk/"
+BUGTRACKER = "https://github.com/adapteva/epiphany-binutils-gdb/issues"
+
+SECTION = "devel"
+LICENSE = "GPLv3"
 
 # Ensure that ${S} points to the source location
 S = "${WORKDIR}/git"

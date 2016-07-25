@@ -21,18 +21,11 @@ inherit exotic-set-paths-host-is-exotic-target
 
 require epiphany-elf-newlib-${PV}.inc
 
-##################################################################
-# Part two of this refactoring will make this file an append to
-# the exotic-gcc-runtime_4.8.bb file and the following will be
-# the content of that file!
-# Consider making it clear that this is gcc with newlib!
-##################################################################
-
 #
 # Now the script
 #
 
-require epiphany-elf-libgloss.inc
+inherit exotic-libgloss
 
 #
 # Now update DEPENDS to ensure that the correct libraries get built
