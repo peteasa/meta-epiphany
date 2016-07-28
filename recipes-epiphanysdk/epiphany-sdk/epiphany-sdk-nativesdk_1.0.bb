@@ -21,8 +21,10 @@ FILES_${PN} += " \
     ${prefix}/lib/epiphany-elf \
 "
 
+# Not good to strip exotic binaries
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_SYSROOT_STRIP = "1"
 
 ## Only need to provide libxx.so files for building in the sdk so ignore dependancies
 SKIP_FILEDEPS_${PN} = "1"
