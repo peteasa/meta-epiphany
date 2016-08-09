@@ -1,0 +1,86 @@
+diff --git a/e-lib/src/e_ctimer_get.s b/e-lib/src/e_ctimer_get.s
+index d9e7727..afcd557 100644
+--- a/e-lib/src/e_ctimer_get.s
++++ b/e-lib/src/e_ctimer_get.s
+@@ -28,12 +28,12 @@
+ 
+ // ------------------------------------------------------------------------
+ .section .text;
+-.type    e_ctimer_get, %function;
+-.global  e_ctimer_get;
++.type    _e_ctimer_get, %function;
++.global  _e_ctimer_get;
+ 
+ .balign 4;
+-e_ctimer_get:
+-
++_e_ctimer_get:
++    
+         and   r0, r0, r0;                    // set the status to check which timer register
+     //----
+         bne   _ctimer1_get;                  // jump to code for timer1
+@@ -54,7 +54,7 @@ _ctimer1_get:
+     //----
+         rts;                                 // return with the current value of the ctimer
+ 
+-.size    e_ctimer_get, .-e_ctimer_get;
++.size    _e_ctimer_get, .-_e_ctimer_get;
+ 
+ 
+ /* ------------------------------------------------------------------------
+diff --git a/e-lib/src/e_ctimer_set.s b/e-lib/src/e_ctimer_set.s
+index 2228101..6e7c2ed 100644
+--- a/e-lib/src/e_ctimer_set.s
++++ b/e-lib/src/e_ctimer_set.s
+@@ -30,11 +30,11 @@
+ 
+ // ------------------------------------------------------------------------
+ .section .text;
+-.type    e_ctimer_set, %function;
+-.global  e_ctimer_set;
++.type    _e_ctimer_set, %function;
++.global  _e_ctimer_set;
+ 
+ .balign 4;
+-e_ctimer_set:
++_e_ctimer_set:
+ 
+         and   r0, r0, r0;                    // set the status to check which timer register
+     //----
+@@ -61,7 +61,7 @@ _ctimer1_set:
+         rts;                                 // return with the current value of the ctimer
+ 
+ 
+-.size    e_ctimer_set, .-e_ctimer_set;
++.size    _e_ctimer_set, .-_e_ctimer_set;
+ 
+ 
+ /* ------------------------------------------------------------------------
+diff --git a/e-lib/src/e_ctimer_start.s b/e-lib/src/e_ctimer_start.s
+index cfd2bbe..4afab5e 100644
+--- a/e-lib/src/e_ctimer_start.s
++++ b/e-lib/src/e_ctimer_start.s
+@@ -27,11 +27,11 @@
+ 
+ // ------------------------------------------------------------------------
+ .section .text;
+-.type    e_ctimer_start, %function;
+-.global  e_ctimer_start;
++.type    _e_ctimer_start, %function;
++.global  _e_ctimer_start;
+ 
+ .balign 4;
+-e_ctimer_start:
++_e_ctimer_start:
+ 
+         and   r0, r0, r0;                    // set the status to check which timer register
+     //----
+@@ -86,7 +86,7 @@ _ctimer1_start:
+         rts;                                 // return with the current value of the ctimer
+ 
+ 
+-.size    e_ctimer_start, .-e_ctimer_start;
++.size    _e_ctimer_start, .-_e_ctimer_start;
+ 
+ 
+ /* ------------------------------------------------------------------------
