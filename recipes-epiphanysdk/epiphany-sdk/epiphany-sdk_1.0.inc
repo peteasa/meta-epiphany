@@ -29,7 +29,6 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/files:"
 SRC_URI += " \
     file://0001-simplebuild.patch \
     file://0002-correct-sys-header-file.patch \
-    file://0003-temp-fix-asm-label.patch \
 "
 
 # 2016.3.1
