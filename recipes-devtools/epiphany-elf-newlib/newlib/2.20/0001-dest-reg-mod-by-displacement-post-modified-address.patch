@@ -1,0 +1,49 @@
+diff --git a/newlib/libc/stdio/vfwscanf.c b/newlib/libc/stdio/vfwscanf.c
+index 263d8f2..9e984d7 100644
+--- a/newlib/libc/stdio/vfwscanf.c
++++ b/newlib/libc/stdio/vfwscanf.c
+@@ -373,6 +373,17 @@ _DEFUN(_sfgetwc_r, (ptr, fp),
+ }
+ #endif /* STRING_ONLY */
+ 
++static wint_t _consume_white_space(struct _reent *rptr, register FILE *fp, int *pnread)
++{
++  wint_t wi;
++
++  while ((wi = _fgetwc_r (rptr, fp)) != WEOF && iswspace (wi))
++    (*pnread)++;
++  if (wi != WEOF)
++    _ungetwc_r (rptr, wi, fp);
++  return wi;
++}
++
+ int
+ _DEFUN(__SVFWSCANF_R, (rptr, fp, fmt0, ap),
+        struct _reent *rptr _AND
+@@ -480,10 +491,9 @@ _DEFUN(__SVFWSCANF_R, (rptr, fp, fmt0, ap),
+ 	goto all_done;
+       if (iswspace (c))
+ 	{
+-	  while ((c = _fgetwc_r (rptr, fp)) != WEOF && iswspace(c))
+-	    ;
+-	  if (c != WEOF)
+-	    _ungetwc_r (rptr, c, fp);
++      int tmp;
++      tmp = 0;
++	  _consume_white_space(rptr, fp, &tmp);
+ 	  continue;
+ 	}
+       if (c != L'%')
+@@ -757,11 +767,8 @@ _DEFUN(__SVFWSCANF_R, (rptr, fp, fmt0, ap),
+        */
+       if ((flags & NOSKIP) == 0)
+ 	{
+-	  while ((wi = _fgetwc_r (rptr, fp)) != WEOF && iswspace (wi))
+-	    nread++;
+-	  if (wi == WEOF)
++	  if (_consume_white_space(rptr, fp, &nread) == WEOF)
+ 	    goto input_failure;
+-	  _ungetwc_r (rptr, wi, fp);
+ 	}
+ 
+       /*
