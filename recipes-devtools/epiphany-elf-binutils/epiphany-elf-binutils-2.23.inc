@@ -18,7 +18,7 @@ LICENSE = "GPLv3"
 S = "${WORKDIR}/git"
 
 # Sources
-FILESEXTRAPATHS_prepend := "${THISDIR}/epiphany-elf-binutils:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/epiphany-elf-binutils/2.23:"
 
 LIC_FILES_CHKSUM="\
     file://src-release;endline=17;md5=4830a9ef968f3b18dd5e9f2c00db2d35\
