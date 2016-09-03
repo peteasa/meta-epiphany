@@ -2,6 +2,8 @@
 ## modelled on gcc-${PV}.inc
 ##
 
+inherit exotic-newlib-common
+
 SUMMARY = "GNU newlib ANSI C libraries for ${EXOTIC_TARGET_ARCH} processor"
 DESCRIPTION = "GNU newlib is a simple ANSI C library, math library, and \
 collection of board support packages"
@@ -19,8 +21,6 @@ LIC_FILES_CHKSUM = "\
     file://COPYING3;md5=d32239bcb673463ab874e80d47fae504 \
     file://COPYING3.LIB;md5=6a6a8e020838b23406c81b19c1d46df6 \
 "
-
-inherit exotic-newlib-common
 
 # Third digit in PV should be incremented after a minor release
 
