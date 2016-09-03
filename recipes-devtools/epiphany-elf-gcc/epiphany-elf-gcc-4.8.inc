@@ -8,7 +8,7 @@ PV = "4.8.2"
 
 BINV = "4.8.2"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/epiphany-elf-gcc-4.8:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/epiphany-elf-gcc/4.8:"
 
 DEPENDS =+ "mpfr gmp libmpc zlib"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
