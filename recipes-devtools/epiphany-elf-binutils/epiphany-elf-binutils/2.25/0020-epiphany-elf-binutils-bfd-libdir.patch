@@ -1,0 +1,15 @@
+diff --git a/bfd/configure b/bfd/configure
+index 3470aa7..97d54e1 100755
+--- a/bfd/configure
++++ b/bfd/configure
+@@ -13062,8 +13062,8 @@ fi
+   bfdlibdir='$(libdir)'
+   bfdincludedir='$(includedir)'
+   if test "${host}" != "${target}"; then
+-    bfdlibdir='$(exec_prefix)/$(host_noncanonical)/$(target_noncanonical)/lib'
+-    bfdincludedir='$(exec_prefix)/$(host_noncanonical)/$(target_noncanonical)/include'
++    bfdlibdir='$(exec_prefix)/lib/$(target_noncanonical)'
++    bfdincludedir='$(exec_prefix)/include/$(target_noncanonical)'
+   fi
+ 
+ 
