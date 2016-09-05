@@ -69,10 +69,15 @@ do_install () {
 	cp  /dev/null ${D}/${prefix}/bin/epiphany-elf-ar
 	cp  /dev/null ${D}/${prefix}/bin/epiphany-elf-as
 	cp  /dev/null ${D}/${prefix}/bin/epiphany-elf-gcc
+	cp  /dev/null ${D}/${prefix}/bin/epiphany-elf-objcopy
+	cp  /dev/null ${D}/${prefix}/bin/epiphany-elf-objdump
 	cd ${D}/${prefix}/bin
 	ln -s epiphany-elf-ar e-ar
 	ln -s epiphany-elf-as e-as
 	ln -s epiphany-elf-gcc e-gcc
+	ln -s epiphany-elf-objcopy e-objcopy
+	ln -s epiphany-elf-objdump e-objdump
+	# Now remove dummy files
 	rm -f epiphany-elf-*
 
 	cp ${B}/e-xml/Release/libe-xml.so ${D}/${prefix}/lib/

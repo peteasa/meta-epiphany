@@ -88,11 +88,14 @@ do_install () {
 	cp  /dev/null ${D}/${prefix}/bin/epiphany-elf/epiphany-elf-as
 	cp  /dev/null ${D}/${prefix}/bin/epiphany-elf/epiphany-elf-gcc
 	cp  /dev/null ${D}/${prefix}/bin/epiphany-elf/epiphany-elf-objcopy
+	cp  /dev/null ${D}/${prefix}/bin/epiphany-elf/epiphany-elf-objdump
 	cd ${D}/${prefix}/bin
 	ln -s epiphany-elf/epiphany-elf-ar e-ar
 	ln -s epiphany-elf/epiphany-elf-as e-as
 	ln -s epiphany-elf/epiphany-elf-gcc e-gcc
-	ln -s epiphany-elf/epiphany-elf-objcopy epiphany-elf-objcopy
+	ln -s epiphany-elf/epiphany-elf-objcopy e-objcopy
+	ln -s epiphany-elf/epiphany-elf-objdump e-objdump
+	# Now remove dummy files
 	rm -rf epiphany-elf
 
 	##
