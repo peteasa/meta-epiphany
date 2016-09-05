@@ -240,7 +240,7 @@ index 0000000..82980af
 +
 +# Object file target for release (.c sources)
 +$(RELEASEDIR)/%.o: %.c
-+	$(COMPILE.c) -MD $(DEBUGFLAGS) $(EXTRACFLAGS) $(INCLUDES) -o $@ $<
++	$(COMPILE.c) -MD $(RELEASEFLAGS) $(EXTRACFLAGS) $(INCLUDES) -o $@ $<
 +	@cp $(basename $@).d $(df).P; \
 +	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 +		-e '/^$$/ d' -e 's/$$/ :/' < $(basename $@).d >> $(df).P; \
