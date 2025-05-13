@@ -20,7 +20,7 @@ EXTRA_OECONF = "--disable-elib"
 FILES:${PN} += "${datadir}/epiphany"
 
 do_configure:prepend () {
-    pushd ${S}
-    ./bootstrap
-    popd
+    cd ${S}
+    ./bootstrap --force
+    cd ${B}
 }

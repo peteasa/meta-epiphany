@@ -4,7 +4,7 @@ DESCRIPTION = "Epiphany target library"
 HOMEPAGE = "http://www.adapteva.com/"
 LICENSE = "GPLv3"
 
-LIC_FILES_CHKSUM = "file://../COPYING;md5=d32239bcb673463ab874e80d47fae504"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 # 2019.1
 BRANCH = "2019.1"
@@ -13,10 +13,11 @@ SRC_URI = " git://github.com/adapteva/epiphany-libs.git;branch=${BRANCH};protoco
 
 ALLOW_EMPTY:${PN} = "1"
 
-S = "${WORKDIR}/git/e-lib"
+SDKSRC = "${WORKDIR}/git"
+S = "${SDKSRC}/e-lib"
 
 do_configure:prepend () {
-    pushd ${S}
-    ./bootstrap
-    popd
+    cd ${SDKSRC}
+    ./bootstrap --force
+    cd ${B}
 }
