@@ -16,6 +16,8 @@ ALLOW_EMPTY:${PN} = "1"
 SDKSRC = "${WORKDIR}/git"
 S = "${SDKSRC}/e-lib"
 
+DEPENDS:remove = "virtual/libc"
+
 do_configure:prepend () {
     cd ${SDKSRC}
     ./bootstrap --force

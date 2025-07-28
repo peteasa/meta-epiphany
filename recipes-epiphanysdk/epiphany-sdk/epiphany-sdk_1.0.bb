@@ -1,7 +1,5 @@
 inherit autotools
 
-BBCLASSEXTEND = "nativesdk"
-
 DESCRIPTION = "Epiphany SDK Build and Install Package"
 HOMEPAGE = "http://www.adapteva.com/"
 LICENSE = "GPLv3"
@@ -18,6 +16,8 @@ S = "${WORKDIR}/git"
 EXTRA_OECONF = "--disable-elib"
 
 FILES:${PN} += "${datadir}/epiphany"
+
+DEPENDS:remove = "virtual/libc"
 
 do_configure:prepend () {
     cd ${S}
